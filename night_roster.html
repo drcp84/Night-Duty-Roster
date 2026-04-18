@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>Night Emergency Roster</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
+
+  .header {
+    background: #fff; border-bottom: 1px solid #e2e8f0;
+    padding: 18px 24px 0;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .live-row { display: flex; align-items: center; gap: 9px; margin-bottom: 2px; }
+  .live-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #ef4444; box-shadow: 0 0 6px #ef4444;
+    animation: blink 1.4s infinite; flex-shrink: 0;
+  }
+  .live-label { font-size: 10px; letter-spacing: 3px; color: #ef4444; font-weight: 700; text-transform: uppercase; }
+  .header-title { font-size: 19px; font-weight: 800; color: #0f172a; letter-spacing: -0.3px; }
+  .month-tabs { display: flex; margin-top: 14px; }
+  .tab {
+    padding: 8px 24px; border: none; border-bottom: 3px solid transparent;
+    background: transparent; color: #94a3b8;
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    font-family: inherit; letter-spacing: 0.3px; transition: all 0.15s;
+  }
+  .tab.active { border-bottom: 3px solid #1a56db; color: #1a56db; font-weight: 700; }
+
+  .legend-wrap { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 10px 24px 12px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .badge {
+    padding: 3px 12px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.8px;
+    cursor: pointer; transition: all 0.15s; user-select: none;
+    border: 1px solid transparent;
+  }
+  .badge-btb { background: #fdf2f8; color: #be185d; border-color: #fbcfe8; cursor: default; }
+
+  .search-row { display: flex; align-items: center; gap: 10px; }
+  .search-wrap { position: relative; flex: 1; max-width: 320px; }
+  .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 13px; color: #94a3b8; pointer-events: none; }
+  .search-input {
+    width: 100%; padding: 8px 12px 8px 34px;
+    border: 1.5px solid #e2e8f0; border-radius: 10px;
+    font-size: 13px; font-family: inherit; color: #0f172a;
+    background: #f8fafc; outline: none; transition: border 0.15s;
+  }
+  .search-input:focus { border-color: #1a56db; }
+  .clear-btn {
+    padding: 7px 14px; border-radius: 10px;
+    border: 1.5px solid #e2e8f0; background: #fff;
+    color: #64748b; font-size: 12px; font-weight: 600;
+    cursor: pointer; font-family: inherit; display: none;
+  }
+  .duty-count { font-size: 12px; color: #94a3b8; font-weight: 500; display: none; }
+
+  .table-wrap { padding: 20px 24px 24px; }
+  .table-card {
+    background: #fff; border: 1px solid #e2e8f0;
+    border-radius: 14px; overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+  .col-header {
+    display: grid; grid-template-columns: 100px 58px 1fr;
+    padding: 9px 16px;
+    background: #f1f5f9; border-bottom: 1px solid #e2e8f0;
+    font-size: 10px; letter-spacing: 2px; color: #94a3b8;
+    font-weight: 700; text-transform: uppercase;
+  }
+  .row {
+    display: grid; grid-template-columns: 100px 58px 1fr;
+    padding: 11px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    border-left: 4px solid transparent;
+    align-items: center; background: #fff;
+  }
+  .row:last-child { border-bottom: none; }
+  .row.today { background: #eff6ff; border-left-color: #1a56db; }
+  .row.consec { background: #fdf2f8; border-left-color: #f472b6; }
+  .row.weekend { background: #fafafa; }
+
+  .date-cell { display: flex; align-items: center; gap: 7px; }
+  .date-text { font-size: 13px; font-weight: 500; color: #374151; }
+  .date-text.today { font-weight: 800; color: #1a56db; }
+  .today-badge {
+    font-size: 9px; background: #1a56db; color: #fff;
+    padding: 2px 7px; border-radius: 8px; font-weight: 700; letter-spacing: 1px;
+  }
+  .day-cell { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; color: #9ca3af; }
+  .day-cell.weekend { color: #ea580c; }
+  .person-cell { display: flex; align-items: center; gap: 8px; }
+  .person-badge {
+    display: inline-block; padding: 4px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 700; letter-spacing: 1px; border: 1px solid transparent;
+  }
+  .btb-label { font-size: 10px; color: #f472b6; font-weight: 600; }
+  .empty-msg { padding: 28px 20px; text-align: center; color: #94a3b8; font-size: 13px; }
+
+  .loading-screen {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; padding: 60px 24px; gap: 16px;
+  }
+  .spinner {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 3px solid #e2e8f0; border-top-color: #1a56db;
+    animation: spin 0.8s linear infinite;
+  }
+  .loading-text { font-size: 13px; color: #94a3b8; }
+  .error-box {
+    margin: 24px; padding: 20px; border-radius: 12px;
+    background: #fef2f2; border: 1px solid #fecaca;
+    color: #b91c1c; font-size: 13px; line-height: 1.7; display: none;
+  }
+
+  .wa-row { margin-top: 18px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .wa-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 11px 22px; border-radius: 12px;
+    background: #25D366; color: #fff; border: none;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    box-shadow: 0 2px 8px rgba(37,211,102,0.3); transition: all 0.2s;
+  }
+  .wa-btn.copied { background: #16a34a; }
+  .wa-hint { font-size: 11px; color: #94a3b8; line-height: 1.6; }
+
+  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 400px) {
+    .header, .legend-wrap, .table-wrap { padding-left: 14px; padding-right: 14px; }
+    .col-header, .row { grid-template-columns: 88px 50px 1fr; padding-left: 12px; padding-right: 12px; }
+    .tab { padding: 8px 14px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="live-row">
+    <div class="live-dot"></div>
+    <span class="live-label">Night Emergency Roster</span>
+  </div>
+  <div class="header-title">Duty Schedule &nbsp;·&nbsp; Apr – Jun 2026</div>
+  <div class="month-tabs" id="monthTabs"></div>
+</div>
+
+<div class="legend-wrap">
+  <div class="badges" id="badges"></div>
+  <div class="search-row">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="searchInput" type="text" placeholder="Search your name to see your duties..." autocomplete="off" />
+    </div>
+    <button class="clear-btn" id="clearBtn">Clear</button>
+    <span class="duty-count" id="dutyCount"></span>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <div class="table-card">
+    <div class="col-header"><div>Date</div><div>Day</div><div>On Duty</div></div>
+    <div id="loadingScreen" class="loading-screen">
+      <div class="spinner"></div>
+      <div class="loading-text">Loading roster...</div>
+    </div>
+    <div id="rosterBody"></div>
+  </div>
+  <div id="errorBox" class="error-box"></div>
+
+  <div class="wa-row">
+    <button class="wa-btn" id="waBtn">
+      <span id="waBtnIcon">📋</span>
+      <span id="waBtnText">Copy This Week's Duty</span>
+    </button>
+    <span class="wa-hint">Copies current week (Sun–Sat)<br>ready to paste in WhatsApp / SMS</span>
+  </div>
+</div>
+
+<script>
+const DATA_URL = "https://raw.githubusercontent.com/drcp84/Night-Duty-Roster/main/roster.json";
+
+const COLORS = {
+  "cp":         { bg: "#e8f0fe", accent: "#1a56db", text: "#1e40af" },
+  "mp":         { bg: "#e6f4ea", accent: "#188038", text: "#166534" },
+  "ks":         { bg: "#fff3e0", accent: "#e65100", text: "#9a3412" },
+  "sm":         { bg: "#f3e8fd", accent: "#7e22ce", text: "#6b21a8" },
+  "ps":         { bg: "#fce8f3", accent: "#be185d", text: "#9d174d" },
+  "ravi":       { bg: "#e6fafa", accent: "#0e7490", text: "#155e75" },
+  "mitul":      { bg: "#fefce8", accent: "#a16207", text: "#854d0e" },
+  "mitul/ravi": { bg: "#f0fdf4", accent: "#15803d", text: "#14532d" },
+};
+
+const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const MONTHS_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+let ROSTER_DATA = [], months = {}, monthKeys = [], activeMonth = "", searchVal = "", consecutive = new Set();
+
+function getToday() {
+  const n = new Date();
+  return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");
+}
+const today = getToday();
+
+function fmtDisplay(d) { const [,m,day]=d.split("-"); return parseInt(day)+" "+MONTHS_SHORT[parseInt(m)-1]; }
+function fmtWA(d) { const [,m,day]=d.split("-"); return parseInt(day)+"/"+parseInt(m); }
+
+function buildConsecutive() {
+  const map={};
+  ROSTER_DATA.forEach(e=>map[e.date]=e.person);
+  const flagged=new Set();
+  ROSTER_DATA.forEach(e=>{
+    const norm=p=>p?p.split("/"):[];
+    const cur=norm(e.person);
+    const pd=new Date(e.date); pd.setDate(pd.getDate()-1);
+    const nd=new Date(e.date); nd.setDate(nd.getDate()+1);
+    const pp=norm(map[pd.toISOString().slice(0,10)]);
+    const np=norm(map[nd.toISOString().slice(0,10)]);
+    if(cur.some(c=>pp.includes(c))||cur.some(c=>np.includes(c))) flagged.add(e.date);
+  });
+  return flagged;
+}
+
+function buildMonths() {
+  const m={};
+  ROSTER_DATA.forEach(e=>{ const k=e.date.slice(0,7); if(!m[k])m[k]=[]; m[k].push(e); });
+  return m;
+}
+
+function renderTabs() {
+  const el=document.getElementById("monthTabs"); el.innerHTML="";
+  monthKeys.forEach(mk=>{
+    const btn=document.createElement("button");
+    btn.className="tab"+(mk===activeMonth?" active":"");
+    btn.textContent=MONTH_NAMES[parseInt(mk.split("-")[1])-1].toUpperCase();
+    btn.onclick=()=>{ activeMonth=mk; searchVal=""; document.getElementById("searchInput").value=""; renderAll(); scrollToToday(); };
+    el.appendChild(btn);
+  });
+}
+
+function renderBadges() {
+  const el=document.getElementById("badges"); el.innerHTML="";
+  const seen=new Set(), persons=[];
+  ROSTER_DATA.forEach(e=>e.person.split("/").forEach(p=>{ if(!seen.has(p)){seen.add(p);persons.push(p);} }));
+  persons.forEach(person=>{
+    const col=COLORS[person]; if(!col)return;
+    const span=document.createElement("span");
+    span.className="badge"; span.textContent=person.toUpperCase(); span.dataset.person=person;
+    applyBadgeStyle(span,person,col);
+    span.onclick=()=>{
+      const inp=document.getElementById("searchInput");
+      if(searchVal===person){searchVal="";inp.value="";}else{searchVal=person;inp.value=person;}
+      renderAll();
+    };
+    el.appendChild(span);
+  });
+  const btb=document.createElement("span");
+  btb.className="badge badge-btb"; btb.textContent="! BACK-TO-BACK"; el.appendChild(btb);
+}
+
+function applyBadgeStyle(span,person,col){
+  const active=searchVal===person;
+  span.style.background=active?col.accent:col.bg;
+  span.style.color=active?"#fff":col.text;
+  span.style.borderColor=col.accent+"44";
+}
+
+function refreshBadgeStyles(){
+  document.querySelectorAll(".badge[data-person]").forEach(span=>{
+    const col=COLORS[span.dataset.person]; if(col)applyBadgeStyle(span,span.dataset.person,col);
+  });
+}
+
+function renderRows(){
+  const body=document.getElementById("rosterBody"); body.innerHTML="";
+  const rows=months[activeMonth]||[];
+  const filtered=searchVal?rows.filter(e=>e.person.toLowerCase().split("/").some(p=>p===searchVal||p.startsWith(searchVal))):rows;
+
+  const clearBtn=document.getElementById("clearBtn"), dutyCount=document.getElementById("dutyCount");
+  clearBtn.style.display=searchVal?"block":"none";
+  if(searchVal&&filtered.length>0){dutyCount.style.display="block";dutyCount.textContent=filtered.length+" duties";}
+  else dutyCount.style.display="none";
+
+  if(filtered.length===0){
+    const d=document.createElement("div"); d.className="empty-msg";
+    d.textContent='No duties found for "'+searchVal+'" this month.'; body.appendChild(d); return;
+  }
+
+  filtered.forEach((entry,i)=>{
+    const isToday=entry.date===today, isConsec=consecutive.has(entry.date);
+    const isWeekend=entry.day==="Sat"||entry.day==="Sun";
+    const col=COLORS[entry.person]||{bg:"#f1f5f9",accent:"#64748b",text:"#334155"};
+
+    const row=document.createElement("div");
+    row.className="row"+(isToday?" today":isConsec?" consec":isWeekend?" weekend":"");
+    if(isToday&&!searchVal)row.id="today-row";
+    if(i===filtered.length-1)row.style.borderBottom="none";
+
+    const dateCell=document.createElement("div"); dateCell.className="date-cell";
+    const dateSpan=document.createElement("span"); dateSpan.className="date-text"+(isToday?" today":""); dateSpan.textContent=fmtDisplay(entry.date); dateCell.appendChild(dateSpan);
+    if(isToday){const b=document.createElement("span");b.className="today-badge";b.textContent="TODAY";dateCell.appendChild(b);}
+
+    const dayCell=document.createElement("div"); dayCell.className="day-cell"+(isWeekend?" weekend":""); dayCell.textContent=entry.day.toUpperCase();
+
+    const personCell=document.createElement("div"); personCell.className="person-cell";
+    const pb=document.createElement("span"); pb.className="person-badge"; pb.textContent=entry.person.toUpperCase();
+    if(isConsec){pb.style.background="#fce7f3";pb.style.color="#be185d";pb.style.borderColor="#fbcfe8";}
+    else{pb.style.background=col.bg;pb.style.color=col.text;pb.style.borderColor=col.accent+"44";}
+    personCell.appendChild(pb);
+    if(isConsec){const l=document.createElement("span");l.className="btb-label";l.textContent="⚠ Back-to-back";personCell.appendChild(l);}
+
+    row.appendChild(dateCell); row.appendChild(dayCell); row.appendChild(personCell); body.appendChild(row);
+  });
+}
+
+function renderAll(){ renderTabs(); refreshBadgeStyles(); renderRows(); }
+function scrollToToday(){ setTimeout(()=>{ const el=document.getElementById("today-row"); if(el)el.scrollIntoView({behavior:"smooth",block:"center"}); },100); }
+
+function buildWeekMsg(){
+  const d=new Date(today), dow=d.getDay();
+  const sun=new Date(d); sun.setDate(d.getDate()-dow);
+  const sat=new Date(sun); sat.setDate(sun.getDate()+6);
+  const toStr=dt=>dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0");
+  const start=toStr(sun),end=toStr(sat);
+  const weekRows=ROSTER_DATA.filter(e=>e.date>=start&&e.date<=end);
+  if(!weekRows.length)return "No roster data for current week.";
+  return "🌙 Night Emergency Duty — Week of "+fmtWA(start)+" to "+fmtWA(end)+"\n\n"+weekRows.map(e=>fmtWA(e.date)+" ("+e.day+").. "+e.person.toUpperCase()).join("\n");
+}
+
+document.getElementById("waBtn").onclick=function(){
+  const msg=buildWeekMsg(), btn=document.getElementById("waBtn"), icon=document.getElementById("waBtnIcon"), text=document.getElementById("waBtnText");
+  function onSuccess(){btn.classList.add("copied");icon.textContent="✓";text.textContent="Copied!";setTimeout(()=>{btn.classList.remove("copied");icon.textContent="📋";text.textContent="Copy This Week's Duty";},2500);}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(msg).then(onSuccess).catch(()=>fallback(msg,onSuccess));}
+  else fallback(msg,onSuccess);
+};
+
+function fallback(text,onSuccess){
+  const ta=document.createElement("textarea"); ta.value=text; ta.style.cssText="position:fixed;top:0;left:0;opacity:0;pointer-events:none;";
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try{document.execCommand("copy");onSuccess();}catch(e){alert("Copy failed. Please manually copy:\n\n"+text);}
+  document.body.removeChild(ta);
+}
+
+document.getElementById("searchInput").addEventListener("input",function(){searchVal=this.value.toLowerCase().trim();renderAll();});
+document.getElementById("clearBtn").onclick=function(){searchVal="";document.getElementById("searchInput").value="";renderAll();};
+
+// ── Fetch from GitHub ──
+fetch(DATA_URL+"?t="+Date.now())
+  .then(res=>{ if(!res.ok)throw new Error("HTTP "+res.status); return res.json(); })
+  .then(data=>{
+    ROSTER_DATA=data;
+    consecutive=buildConsecutive();
+    months=buildMonths();
+    monthKeys=Object.keys(months);
+    activeMonth=monthKeys.includes(today.slice(0,7))?today.slice(0,7):monthKeys[0];
+    document.getElementById("loadingScreen").style.display="none";
+    renderBadges(); renderAll(); scrollToToday();
+  })
+  .catch(err=>{
+    document.getElementById("loadingScreen").style.display="none";
+    const eb=document.getElementById("errorBox"); eb.style.display="block";
+    eb.innerHTML="⚠️ <strong>Could not load roster.</strong><br>Check internet connection and try again.<br><small style='color:#ef4444'>"+err.message+"</small>";
+  });
+</script>
+</body>
+</html>
