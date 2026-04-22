@@ -9,19 +9,26 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Inter', 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
 
+  /* ── HEADER ── */
   .header {
     background: #fff; border-bottom: 1px solid #e2e8f0;
     padding: 18px 24px 0;
     position: sticky; top: 0; z-index: 100;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
-  .live-row { display: flex; align-items: center; gap: 9px; margin-bottom: 2px; }
+  .live-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
+  .live-left { display: flex; align-items: center; gap: 9px; }
   .live-dot {
     width: 8px; height: 8px; border-radius: 50%;
     background: #ef4444; box-shadow: 0 0 6px #ef4444;
     animation: blink 1.4s infinite; flex-shrink: 0;
   }
   .live-label { font-size: 10px; letter-spacing: 3px; color: #ef4444; font-weight: 700; text-transform: uppercase; }
+  .admin-trigger {
+    font-size: 18px; background: none; border: none; cursor: pointer;
+    opacity: 0.25; transition: opacity 0.2s; padding: 4px;
+  }
+  .admin-trigger:hover { opacity: 0.6; }
   .header-title { font-size: 19px; font-weight: 800; color: #0f172a; letter-spacing: -0.3px; }
   .month-tabs { display: flex; margin-top: 14px; }
   .tab {
@@ -32,6 +39,7 @@
   }
   .tab.active { border-bottom: 3px solid #1a56db; color: #1a56db; font-weight: 700; }
 
+  /* ── LEGEND ── */
   .legend-wrap { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 10px 24px 12px; }
   .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
   .badge {
@@ -42,7 +50,6 @@
   }
   .badge-btb  { background: #fdf2f8; color: #be185d; border-color: #fbcfe8; cursor: default; }
   .badge-swap { background: #fff7ed; color: #c2410c; border-color: #fed7aa; cursor: default; }
-
   .search-row { display: flex; align-items: center; gap: 10px; }
   .search-wrap { position: relative; flex: 1; max-width: 320px; }
   .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 13px; color: #94a3b8; pointer-events: none; }
@@ -61,6 +68,7 @@
   }
   .duty-count { font-size: 12px; color: #94a3b8; font-weight: 500; display: none; }
 
+  /* ── TABLE ── */
   .table-wrap { padding: 20px 24px 24px; }
   .table-card {
     background: #fff; border: 1px solid #e2e8f0;
@@ -86,10 +94,6 @@
   .row.consec  { background: #fdf2f8; border-left-color: #f472b6; }
   .row.swapped { background: #fff7ed; border-left-color: #f97316; }
   .row.weekend { background: #fafafa; }
-
-  /* swapped takes priority over consec visually */
-  .row.swapped.consec { background: #fff7ed; border-left-color: #f97316; }
-
   .date-cell { display: flex; align-items: center; gap: 7px; }
   .date-text { font-size: 13px; font-weight: 500; color: #374151; }
   .date-text.today { font-weight: 800; color: #1a56db; }
@@ -107,7 +111,6 @@
   .btb-label  { font-size: 10px; color: #f472b6; font-weight: 600; }
   .swap-label { font-size: 10px; color: #ea580c; font-weight: 600; }
   .empty-msg { padding: 28px 20px; text-align: center; color: #94a3b8; font-size: 13px; }
-
   .loading-screen {
     display: flex; flex-direction: column; align-items: center;
     justify-content: center; padding: 60px 24px; gap: 16px;
@@ -123,18 +126,109 @@
     background: #fef2f2; border: 1px solid #fecaca;
     color: #b91c1c; font-size: 13px; line-height: 1.7; display: none;
   }
-
   .wa-row { margin-top: 18px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
   .wa-btn {
     display: flex; align-items: center; gap: 8px;
     padding: 11px 22px; border-radius: 12px;
     background: #25D366; color: #fff; border: none;
-    font-size: 13px; font-weight: 700;
-    cursor: pointer; font-family: inherit;
+    font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit;
     box-shadow: 0 2px 8px rgba(37,211,102,0.3); transition: all 0.2s;
   }
   .wa-btn.copied { background: #16a34a; }
   .wa-hint { font-size: 11px; color: #94a3b8; line-height: 1.6; }
+
+  /* ── ADMIN OVERLAY ── */
+  .overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(15,23,42,0.55); backdrop-filter: blur(4px);
+    align-items: flex-end; justify-content: center;
+  }
+  .overlay.open { display: flex; }
+  .admin-sheet {
+    background: #fff; width: 100%; max-width: 480px;
+    border-radius: 20px 20px 0 0;
+    padding: 24px 24px 36px;
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.15);
+    animation: slideUp 0.25s ease;
+    max-height: 92vh; overflow-y: auto;
+  }
+  @keyframes slideUp { from{transform:translateY(60px);opacity:0} to{transform:translateY(0);opacity:1} }
+  .sheet-handle { width: 40px; height: 4px; background: #e2e8f0; border-radius: 2px; margin: 0 auto 20px; }
+  .sheet-title { font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px; }
+  .sheet-sub   { font-size: 12px; color: #94a3b8; margin-bottom: 20px; }
+
+  /* Setup screen */
+  .setup-screen, .admin-screen, .pwd-screen { display: none; }
+  .setup-screen.active, .admin-screen.active, .pwd-screen.active { display: block; }
+
+  .field-label { font-size: 11px; font-weight: 700; color: #64748b; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; margin-top: 16px; }
+  .field-label:first-of-type { margin-top: 0; }
+  .field-input {
+    width: 100%; padding: 10px 14px;
+    border: 1.5px solid #e2e8f0; border-radius: 10px;
+    font-size: 13px; font-family: inherit; color: #0f172a;
+    background: #f8fafc; outline: none; transition: border 0.15s;
+  }
+  .field-input:focus { border-color: #1a56db; }
+  .field-select {
+    width: 100%; padding: 10px 14px;
+    border: 1.5px solid #e2e8f0; border-radius: 10px;
+    font-size: 13px; font-family: inherit; color: #0f172a;
+    background: #f8fafc; outline: none; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center;
+    cursor: pointer;
+  }
+  .field-select:focus { border-color: #1a56db; }
+
+  .check-row { display: flex; align-items: center; gap: 10px; margin-top: 16px; cursor: pointer; }
+  .check-row input[type=checkbox] { width: 18px; height: 18px; accent-color: #f97316; cursor: pointer; }
+  .check-label { font-size: 13px; color: #374151; font-weight: 500; }
+
+  .btn-primary {
+    width: 100%; margin-top: 20px; padding: 13px;
+    background: #1a56db; color: #fff; border: none; border-radius: 12px;
+    font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit;
+    transition: background 0.15s;
+  }
+  .btn-primary:hover { background: #1d4ed8; }
+  .btn-primary:disabled { background: #93c5fd; cursor: not-allowed; }
+  .btn-danger {
+    width: 100%; margin-top: 10px; padding: 11px;
+    background: #fff; color: #ef4444; border: 1.5px solid #fecaca; border-radius: 12px;
+    font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
+  }
+  .btn-secondary {
+    width: 100%; margin-top: 10px; padding: 11px;
+    background: #f1f5f9; color: #64748b; border: none; border-radius: 12px;
+    font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
+  }
+
+  .info-box {
+    background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px;
+    padding: 12px 14px; font-size: 12px; color: #1e40af; line-height: 1.7; margin-top: 4px;
+  }
+  .warn-box {
+    background: #fff7ed; border: 1px solid #fed7aa; border-radius: 10px;
+    padding: 12px 14px; font-size: 12px; color: #c2410c; line-height: 1.7; margin-top: 12px;
+  }
+  .success-box {
+    background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px;
+    padding: 12px 14px; font-size: 12px; color: #15803d; line-height: 1.7;
+    margin-top: 12px; display: none;
+  }
+  .saving-spinner {
+    display: none; width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff;
+    animation: spin 0.7s linear infinite; margin: 0 auto;
+  }
+
+  /* Current duty display */
+  .current-duty-box {
+    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 12px 14px; margin-top: 8px; font-size: 13px; color: #374151;
+    min-height: 42px;
+  }
 
   @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
   @keyframes spin  { to { transform: rotate(360deg); } }
@@ -143,20 +237,26 @@
     .header, .legend-wrap, .table-wrap { padding-left: 14px; padding-right: 14px; }
     .col-header, .row { grid-template-columns: 88px 50px 1fr; padding-left: 12px; padding-right: 12px; }
     .tab { padding: 8px 14px; font-size: 12px; }
+    .admin-sheet { padding: 20px 18px 32px; }
   }
 </style>
 </head>
 <body>
 
+<!-- ── HEADER ── -->
 <div class="header">
   <div class="live-row">
-    <div class="live-dot"></div>
-    <span class="live-label">Night Emergency Roster</span>
+    <div class="live-left">
+      <div class="live-dot"></div>
+      <span class="live-label">Night Emergency Roster</span>
+    </div>
+    <button class="admin-trigger" id="adminTrigger" title="Admin">⚙️</button>
   </div>
   <div class="header-title">Duty Schedule &nbsp;·&nbsp; Apr – Jun 2026</div>
   <div class="month-tabs" id="monthTabs"></div>
 </div>
 
+<!-- ── LEGEND + SEARCH ── -->
 <div class="legend-wrap">
   <div class="badges" id="badges"></div>
   <div class="search-row">
@@ -169,6 +269,7 @@
   </div>
 </div>
 
+<!-- ── TABLE ── -->
 <div class="table-wrap">
   <div class="table-card">
     <div class="col-header"><div>Date</div><div>Day</div><div>On Duty</div></div>
@@ -179,7 +280,6 @@
     <div id="rosterBody"></div>
   </div>
   <div id="errorBox" class="error-box"></div>
-
   <div class="wa-row">
     <button class="wa-btn" id="waBtn">
       <span id="waBtnIcon">📋</span>
@@ -189,34 +289,134 @@
   </div>
 </div>
 
+<!-- ── ADMIN OVERLAY ── -->
+<div class="overlay" id="overlay">
+  <div class="admin-sheet" id="adminSheet">
+    <div class="sheet-handle"></div>
+
+    <!-- PASSWORD SCREEN -->
+    <div class="pwd-screen active" id="pwdScreen">
+      <div class="sheet-title">🔐 Admin Access</div>
+      <div class="sheet-sub">Enter password to manage duties</div>
+      <div class="field-label">Password</div>
+      <input class="field-input" id="pwdInput" type="password" placeholder="Enter admin password" autocomplete="off" />
+      <div id="pwdError" style="color:#ef4444;font-size:12px;margin-top:8px;display:none;">Wrong password. Try again.</div>
+      <button class="btn-primary" id="pwdSubmit">Continue</button>
+      <button class="btn-secondary" onclick="closeAdmin()">Cancel</button>
+    </div>
+
+    <!-- SETUP SCREEN (first time) -->
+    <div class="setup-screen" id="setupScreen">
+      <div class="sheet-title">⚙️ First Time Setup</div>
+      <div class="sheet-sub">Do this once — takes 2 minutes</div>
+
+      <div class="field-label">Step 1 — Create GitHub Token</div>
+      <div class="info-box">
+        1. Open <strong>github.com</strong> → tap your profile photo<br>
+        2. Settings → scroll to bottom → <strong>Developer settings</strong><br>
+        3. Personal access tokens → <strong>Tokens (classic)</strong><br>
+        4. Generate new token (classic)<br>
+        5. Note: "Roster Admin" · Expiration: No expiration<br>
+        6. Check ✅ <strong>repo</strong> scope only<br>
+        7. Click Generate → <strong>Copy the token</strong>
+      </div>
+
+      <div class="field-label">Step 2 — Paste Token Here</div>
+      <input class="field-input" id="tokenInput" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" />
+
+      <div class="field-label">Step 3 — Set Admin Password</div>
+      <input class="field-input" id="newPwdInput" type="password" placeholder="Choose a password" autocomplete="off" />
+
+      <div class="warn-box">⚠️ Token is stored only on <strong>this device</strong>. If you open on a new device, setup is needed again.</div>
+
+      <button class="btn-primary" id="saveSetup">Save & Continue</button>
+      <button class="btn-secondary" onclick="closeAdmin()">Cancel</button>
+    </div>
+
+    <!-- ADMIN PANEL SCREEN -->
+    <div class="admin-screen" id="adminScreen">
+      <div class="sheet-title">⚙️ Change Duty</div>
+      <div class="sheet-sub">Select a date and assign new person</div>
+
+      <div class="field-label">Select Date</div>
+      <select class="field-select" id="adminDateSelect">
+        <option value="">-- Pick a date --</option>
+      </select>
+
+      <div class="field-label">Current Duty</div>
+      <div class="current-duty-box" id="currentDutyBox">—</div>
+
+      <div class="field-label">Assign To</div>
+      <select class="field-select" id="adminPersonSelect">
+        <option value="">-- Pick a person --</option>
+        <option value="cp">CP</option>
+        <option value="mp">MP</option>
+        <option value="ks">KS</option>
+        <option value="sm">SM</option>
+        <option value="ps">PS</option>
+        <option value="ravi">RAVI</option>
+        <option value="mitul">MITUL</option>
+        <option value="mitul/ravi">MITUL/RAVI</option>
+      </select>
+
+      <label class="check-row">
+        <input type="checkbox" id="swapCheck" />
+        <span class="check-label">🔁 Mark as Swapped duty</span>
+      </label>
+
+      <div class="success-box" id="successBox">✅ Duty updated successfully! Refresh the page to see changes.</div>
+
+      <button class="btn-primary" id="saveDutyBtn">
+        <div class="saving-spinner" id="savingSpinner"></div>
+        <span id="saveBtnText">Save Change</span>
+      </button>
+      <button class="btn-danger" id="logoutBtn">🔒 Lock Admin</button>
+      <button class="btn-secondary" onclick="closeAdmin()">Close</button>
+    </div>
+
+  </div>
+</div>
+
 <script>
-const DATA_URL = "https://raw.githubusercontent.com/drcp84/Night-Duty-Roster/main/roster.json";
+// ── CONFIG ──
+const GITHUB_USER = "drcp84";
+const GITHUB_REPO = "Night-Duty-Roster";
+const GITHUB_FILE = "roster.json";
+const DATA_URL    = "https://raw.githubusercontent.com/"+GITHUB_USER+"/"+GITHUB_REPO+"/main/"+GITHUB_FILE;
+const ADMIN_PWD_KEY   = "ndr_pwd_hash";
+const ADMIN_TOKEN_KEY = "ndr_token";
 
 const COLORS = {
-  "cp":         { bg: "#e8f0fe", accent: "#1a56db", text: "#1e40af" },
-  "mp":         { bg: "#e6f4ea", accent: "#188038", text: "#166534" },
-  "ks":         { bg: "#fff3e0", accent: "#e65100", text: "#9a3412" },
-  "sm":         { bg: "#f3e8fd", accent: "#7e22ce", text: "#6b21a8" },
-  "ps":         { bg: "#fce8f3", accent: "#be185d", text: "#9d174d" },
-  "ravi":       { bg: "#e6fafa", accent: "#0e7490", text: "#155e75" },
-  "mitul":      { bg: "#fefce8", accent: "#a16207", text: "#854d0e" },
-  "mitul/ravi": { bg: "#f0fdf4", accent: "#15803d", text: "#14532d" },
+  "cp":         { bg:"#e8f0fe", accent:"#1a56db", text:"#1e40af" },
+  "mp":         { bg:"#e6f4ea", accent:"#188038", text:"#166534" },
+  "ks":         { bg:"#fff3e0", accent:"#e65100", text:"#9a3412" },
+  "sm":         { bg:"#f3e8fd", accent:"#7e22ce", text:"#6b21a8" },
+  "ps":         { bg:"#fce8f3", accent:"#be185d", text:"#9d174d" },
+  "ravi":       { bg:"#e6fafa", accent:"#0e7490", text:"#155e75" },
+  "mitul":      { bg:"#fefce8", accent:"#a16207", text:"#854d0e" },
+  "mitul/ravi": { bg:"#f0fdf4", accent:"#15803d", text:"#14532d" },
 };
-
 const MONTH_NAMES  = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const MONTHS_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
 let ROSTER_DATA=[], months={}, monthKeys=[], activeMonth="", searchVal="", consecutive=new Set();
 
+// ── UTILS ──
 function getToday(){
   const n=new Date();
   return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");
 }
 const today=getToday();
-
 function fmtDisplay(d){ const[,m,day]=d.split("-"); return parseInt(day)+" "+MONTHS_SHORT[parseInt(m)-1]; }
 function fmtWA(d){ const[,m,day]=d.split("-"); return parseInt(day)+"/"+parseInt(m); }
 
+// Simple hash for password storage
+async function hashStr(str){
+  const buf=await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+// ── ROSTER LOGIC ──
 function buildConsecutive(){
   const map={};
   ROSTER_DATA.forEach(e=>map[e.date]=e.person);
@@ -232,7 +432,6 @@ function buildConsecutive(){
   });
   return flagged;
 }
-
 function buildMonths(){
   const m={};
   ROSTER_DATA.forEach(e=>{ const k=e.date.slice(0,7); if(!m[k])m[k]=[]; m[k].push(e); });
@@ -266,12 +465,8 @@ function renderBadges(){
     };
     el.appendChild(span);
   });
-  // Back-to-back badge
-  const btb=document.createElement("span");
-  btb.className="badge badge-btb"; btb.textContent="! BACK-TO-BACK"; el.appendChild(btb);
-  // Swapped badge
-  const sw=document.createElement("span");
-  sw.className="badge badge-swap"; sw.textContent="⇄ SWAPPED"; el.appendChild(sw);
+  const btb=document.createElement("span"); btb.className="badge badge-btb"; btb.textContent="! BACK-TO-BACK"; el.appendChild(btb);
+  const sw=document.createElement("span");  sw.className="badge badge-swap";  sw.textContent="⇄ SWAPPED";      el.appendChild(sw);
 }
 
 function applyBadgeStyle(span,person,col){
@@ -280,7 +475,6 @@ function applyBadgeStyle(span,person,col){
   span.style.color=active?"#fff":col.text;
   span.style.borderColor=col.accent+"44";
 }
-
 function refreshBadgeStyles(){
   document.querySelectorAll(".badge[data-person]").forEach(span=>{
     const col=COLORS[span.dataset.person]; if(col)applyBadgeStyle(span,span.dataset.person,col);
@@ -291,62 +485,40 @@ function renderRows(){
   const body=document.getElementById("rosterBody"); body.innerHTML="";
   const rows=months[activeMonth]||[];
   const filtered=searchVal?rows.filter(e=>e.person.toLowerCase().split("/").some(p=>p===searchVal||p.startsWith(searchVal))):rows;
-
   const clearBtn=document.getElementById("clearBtn"), dutyCount=document.getElementById("dutyCount");
   clearBtn.style.display=searchVal?"block":"none";
   if(searchVal&&filtered.length>0){dutyCount.style.display="block";dutyCount.textContent=filtered.length+" duties";}
   else dutyCount.style.display="none";
-
   if(filtered.length===0){
     const d=document.createElement("div"); d.className="empty-msg";
     d.textContent='No duties found for "'+searchVal+'" this month.'; body.appendChild(d); return;
   }
-
   filtered.forEach((entry,i)=>{
-    const isToday=entry.date===today;
-    const isConsec=consecutive.has(entry.date);
-    const isSwapped=!!entry.swapped;
-    const isWeekend=entry.day==="Sat"||entry.day==="Sun";
+    const isToday=entry.date===today, isConsec=consecutive.has(entry.date);
+    const isSwapped=!!entry.swapped, isWeekend=entry.day==="Sat"||entry.day==="Sun";
     const col=COLORS[entry.person]||{bg:"#f1f5f9",accent:"#64748b",text:"#334155"};
-
     const row=document.createElement("div");
-    // Priority: today > swapped > consec > weekend
     let cls="row";
     if(isToday) cls+=" today";
-    else if(isSwapped) cls+=" swapped"+(isConsec?" consec":"");
+    else if(isSwapped) cls+=" swapped";
     else if(isConsec) cls+=" consec";
     else if(isWeekend) cls+=" weekend";
     row.className=cls;
     if(isToday&&!searchVal) row.id="today-row";
     if(i===filtered.length-1) row.style.borderBottom="none";
 
-    // Date cell
     const dateCell=document.createElement("div"); dateCell.className="date-cell";
     const dateSpan=document.createElement("span"); dateSpan.className="date-text"+(isToday?" today":""); dateSpan.textContent=fmtDisplay(entry.date); dateCell.appendChild(dateSpan);
     if(isToday){const b=document.createElement("span");b.className="today-badge";b.textContent="TODAY";dateCell.appendChild(b);}
-
-    // Day cell
     const dayCell=document.createElement("div"); dayCell.className="day-cell"+(isWeekend?" weekend":""); dayCell.textContent=entry.day.toUpperCase();
-
-    // Person cell
     const personCell=document.createElement("div"); personCell.className="person-cell";
     const pb=document.createElement("span"); pb.className="person-badge"; pb.textContent=entry.person.toUpperCase();
-
-    if(isSwapped){
-      pb.style.background="#ffedd5"; pb.style.color="#c2410c"; pb.style.borderColor="#fdba74";
-    } else if(isConsec){
-      pb.style.background="#fce7f3"; pb.style.color="#be185d"; pb.style.borderColor="#fbcfe8";
-    } else {
-      pb.style.background=col.bg; pb.style.color=col.text; pb.style.borderColor=col.accent+"44";
-    }
+    if(isSwapped){pb.style.background="#ffedd5";pb.style.color="#c2410c";pb.style.borderColor="#fdba74";}
+    else if(isConsec){pb.style.background="#fce7f3";pb.style.color="#be185d";pb.style.borderColor="#fbcfe8";}
+    else{pb.style.background=col.bg;pb.style.color=col.text;pb.style.borderColor=col.accent+"44";}
     personCell.appendChild(pb);
-
-    if(isSwapped){
-      const l=document.createElement("span"); l.className="swap-label"; l.textContent="⇄ Swapped"; personCell.appendChild(l);
-    } else if(isConsec){
-      const l=document.createElement("span"); l.className="btb-label"; l.textContent="⚠ Back-to-back"; personCell.appendChild(l);
-    }
-
+    if(isSwapped){const l=document.createElement("span");l.className="swap-label";l.textContent="⇄ Swapped";personCell.appendChild(l);}
+    else if(isConsec){const l=document.createElement("span");l.className="btb-label";l.textContent="⚠ Back-to-back";personCell.appendChild(l);}
     row.appendChild(dateCell); row.appendChild(dayCell); row.appendChild(personCell); body.appendChild(row);
   });
 }
@@ -354,6 +526,7 @@ function renderRows(){
 function renderAll(){ renderTabs(); refreshBadgeStyles(); renderRows(); }
 function scrollToToday(){ setTimeout(()=>{ const el=document.getElementById("today-row"); if(el)el.scrollIntoView({behavior:"smooth",block:"center"}); },100); }
 
+// ── WHATSAPP ──
 function buildWeekMsg(){
   const d=new Date(today), dow=d.getDay();
   const sun=new Date(d); sun.setDate(d.getDate()-dow);
@@ -364,32 +537,180 @@ function buildWeekMsg(){
   if(!weekRows.length) return "No roster data for current week.";
   return "🌙 Night Emergency Duty — Week of "+fmtWA(start)+" to "+fmtWA(end)+"\n\n"+weekRows.map(e=>fmtWA(e.date)+" ("+e.day+").. "+e.person.toUpperCase()+(e.swapped?" [swapped]":"")).join("\n");
 }
-
 document.getElementById("waBtn").onclick=function(){
   const msg=buildWeekMsg(), btn=document.getElementById("waBtn"), icon=document.getElementById("waBtnIcon"), text=document.getElementById("waBtnText");
   function onSuccess(){btn.classList.add("copied");icon.textContent="✓";text.textContent="Copied!";setTimeout(()=>{btn.classList.remove("copied");icon.textContent="📋";text.textContent="Copy This Week's Duty";},2500);}
   if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(msg).then(onSuccess).catch(()=>fallback(msg,onSuccess));}
   else fallback(msg,onSuccess);
 };
-
 function fallback(text,onSuccess){
   const ta=document.createElement("textarea"); ta.value=text; ta.style.cssText="position:fixed;top:0;left:0;opacity:0;pointer-events:none;";
   document.body.appendChild(ta); ta.focus(); ta.select();
-  try{document.execCommand("copy");onSuccess();}catch(e){alert("Copy failed. Please manually copy:\n\n"+text);}
+  try{document.execCommand("copy");onSuccess();}catch(e){alert("Copy failed:\n\n"+text);}
   document.body.removeChild(ta);
 }
 
+// ── SEARCH ──
 document.getElementById("searchInput").addEventListener("input",function(){ searchVal=this.value.toLowerCase().trim(); renderAll(); });
 document.getElementById("clearBtn").onclick=function(){ searchVal=""; document.getElementById("searchInput").value=""; renderAll(); };
 
-// ── Fetch from GitHub ──
+// ── ADMIN ──
+function showScreen(name){
+  ["pwdScreen","setupScreen","adminScreen"].forEach(id=>{
+    document.getElementById(id).classList.toggle("active", id===name);
+  });
+}
+
+function openAdmin(){
+  document.getElementById("overlay").classList.add("open");
+  document.getElementById("pwdError").style.display="none";
+  document.getElementById("pwdInput").value="";
+  const hasToken = !!localStorage.getItem(ADMIN_TOKEN_KEY);
+  const hasPwd   = !!localStorage.getItem(ADMIN_PWD_KEY);
+  if(!hasToken || !hasPwd){
+    showScreen("setupScreen");
+  } else {
+    showScreen("pwdScreen");
+    setTimeout(()=>document.getElementById("pwdInput").focus(),200);
+  }
+}
+
+function closeAdmin(){
+  document.getElementById("overlay").classList.remove("open");
+  document.getElementById("successBox").style.display="none";
+}
+
+document.getElementById("adminTrigger").onclick = openAdmin;
+document.getElementById("overlay").onclick = function(e){ if(e.target===this) closeAdmin(); };
+
+// Password submit
+document.getElementById("pwdSubmit").onclick = async function(){
+  const pwd = document.getElementById("pwdInput").value;
+  if(!pwd) return;
+  const hash = await hashStr(pwd);
+  const stored = localStorage.getItem(ADMIN_PWD_KEY);
+  if(hash === stored){
+    document.getElementById("pwdError").style.display="none";
+    openAdminPanel();
+  } else {
+    document.getElementById("pwdError").style.display="block";
+    document.getElementById("pwdInput").value="";
+  }
+};
+document.getElementById("pwdInput").addEventListener("keydown",function(e){ if(e.key==="Enter") document.getElementById("pwdSubmit").click(); });
+
+// Save setup
+document.getElementById("saveSetup").onclick = async function(){
+  const token = document.getElementById("tokenInput").value.trim();
+  const pwd   = document.getElementById("newPwdInput").value.trim();
+  if(!token || !pwd){ alert("Please fill both token and password."); return; }
+  if(!token.startsWith("ghp_") && !token.startsWith("github_pat_")){ alert("Token looks invalid. It should start with ghp_ or github_pat_"); return; }
+  const hash = await hashStr(pwd);
+  localStorage.setItem(ADMIN_TOKEN_KEY, token);
+  localStorage.setItem(ADMIN_PWD_KEY, hash);
+  openAdminPanel();
+};
+
+// Open admin panel
+function openAdminPanel(){
+  showScreen("adminScreen");
+  document.getElementById("successBox").style.display="none";
+  // Populate date dropdown
+  const sel = document.getElementById("adminDateSelect");
+  sel.innerHTML = '<option value="">-- Pick a date --</option>';
+  ROSTER_DATA.forEach(e=>{
+    const opt=document.createElement("option");
+    opt.value=e.date;
+    opt.textContent=fmtDisplay(e.date)+" ("+e.day+") — "+e.person.toUpperCase()+(e.swapped?" ⇄":"");
+    sel.appendChild(opt);
+  });
+  document.getElementById("currentDutyBox").textContent="—";
+  document.getElementById("adminPersonSelect").value="";
+  document.getElementById("swapCheck").checked=false;
+}
+
+// Date select → show current duty
+document.getElementById("adminDateSelect").onchange=function(){
+  const entry=ROSTER_DATA.find(e=>e.date===this.value);
+  const box=document.getElementById("currentDutyBox");
+  if(entry){
+    box.textContent=entry.person.toUpperCase()+(entry.swapped?" (Swapped)":"");
+    document.getElementById("adminPersonSelect").value=entry.person;
+    document.getElementById("swapCheck").checked=!!entry.swapped;
+  } else {
+    box.textContent="—";
+  }
+};
+
+// Save duty change → push to GitHub
+document.getElementById("saveDutyBtn").onclick = async function(){
+  const date   = document.getElementById("adminDateSelect").value;
+  const person = document.getElementById("adminPersonSelect").value;
+  const swapped= document.getElementById("swapCheck").checked;
+  if(!date||!person){ alert("Please select a date and a person."); return; }
+
+  const token = localStorage.getItem(ADMIN_TOKEN_KEY);
+  if(!token){ alert("Token not found. Please set up again."); showScreen("setupScreen"); return; }
+
+  // Update local data
+  const entry = ROSTER_DATA.find(e=>e.date===date);
+  if(!entry){ alert("Date not found in roster."); return; }
+  entry.person=person;
+  if(swapped) entry.swapped=true; else delete entry.swapped;
+
+  // Show spinner
+  const btn=document.getElementById("saveDutyBtn"), spinner=document.getElementById("savingSpinner"), btnText=document.getElementById("saveBtnText");
+  btn.disabled=true; spinner.style.display="block"; btnText.style.display="none";
+
+  try {
+    // Get current file SHA from GitHub
+    const shaRes = await fetch("https://api.github.com/repos/"+GITHUB_USER+"/"+GITHUB_REPO+"/contents/"+GITHUB_FILE, {
+      headers:{ "Authorization":"token "+token, "Accept":"application/vnd.github.v3+json" }
+    });
+    if(!shaRes.ok) throw new Error("Could not fetch file info ("+shaRes.status+")");
+    const shaData = await shaRes.json();
+    const sha = shaData.sha;
+
+    // Encode new content
+    const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(ROSTER_DATA, null, 2))));
+
+    // Push update
+    const pushRes = await fetch("https://api.github.com/repos/"+GITHUB_USER+"/"+GITHUB_REPO+"/contents/"+GITHUB_FILE, {
+      method:"PUT",
+      headers:{ "Authorization":"token "+token, "Accept":"application/vnd.github.v3+json", "Content-Type":"application/json" },
+      body: JSON.stringify({ message:"Duty update: "+date+" → "+person, content:newContent, sha:sha })
+    });
+    if(!pushRes.ok){
+      const err=await pushRes.json();
+      throw new Error(err.message||"Push failed ("+pushRes.status+")");
+    }
+
+    // Success
+    document.getElementById("successBox").style.display="block";
+    consecutive=buildConsecutive(); months=buildMonths();
+    renderAll();
+
+  } catch(err){
+    alert("❌ Error: "+err.message+"\n\nCheck your token has 'repo' access.");
+  } finally {
+    btn.disabled=false; spinner.style.display="none"; btnText.style.display="block";
+  }
+};
+
+// Logout
+document.getElementById("logoutBtn").onclick=function(){
+  localStorage.removeItem(ADMIN_TOKEN_KEY);
+  localStorage.removeItem(ADMIN_PWD_KEY);
+  closeAdmin();
+  alert("Admin locked. Setup required next time.");
+};
+
+// ── FETCH ROSTER ──
 fetch(DATA_URL+"?t="+Date.now())
   .then(res=>{ if(!res.ok)throw new Error("HTTP "+res.status); return res.json(); })
   .then(data=>{
     ROSTER_DATA=data;
-    consecutive=buildConsecutive();
-    months=buildMonths();
-    monthKeys=Object.keys(months);
+    consecutive=buildConsecutive(); months=buildMonths(); monthKeys=Object.keys(months);
     activeMonth=monthKeys.includes(today.slice(0,7))?today.slice(0,7):monthKeys[0];
     document.getElementById("loadingScreen").style.display="none";
     renderBadges(); renderAll(); scrollToToday();
