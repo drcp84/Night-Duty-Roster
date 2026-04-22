@@ -1,75 +1,372 @@
 [
-  { "date": "2026-04-19", "day": "Sun", "person": "cp" },
-  { "date": "2026-04-20", "day": "Mon", "person": "mp" },
-  { "date": "2026-04-21", "day": "Tue", "person": "ps" },
-  { "date": "2026-04-22", "day": "Wed", "person": "ks" },
-  { "date": "2026-04-23", "day": "Thu", "person": "cp" },
-  { "date": "2026-04-24", "day": "Fri", "person": "sm" },
-  { "date": "2026-04-25", "day": "Sat", "person": "cp" },
-  { "date": "2026-04-26", "day": "Sun", "person": "mitul/ravi" },
-  { "date": "2026-04-27", "day": "Mon", "person": "mp" },
-  { "date": "2026-04-28", "day": "Tue", "person": "ps" },
-  { "date": "2026-04-29", "day": "Wed", "person": "ks" },
-  { "date": "2026-04-30", "day": "Thu", "person": "cp" },
-  { "date": "2026-05-01", "day": "Fri", "person": "sm" },
-  { "date": "2026-05-02", "day": "Sat", "person": "mitul" },
-  { "date": "2026-05-03", "day": "Sun", "person": "sm" },
-  { "date": "2026-05-04", "day": "Mon", "person": "sm" },
-  { "date": "2026-05-05", "day": "Tue", "person": "ps" },
-  { "date": "2026-05-06", "day": "Wed", "person": "mp" },
-  { "date": "2026-05-07", "day": "Thu", "person": "sm", "swapped": true },
-  { "date": "2026-05-08", "day": "Fri", "person": "cp" },
-  { "date": "2026-05-09", "day": "Sat", "person": "ravi" },
-  { "date": "2026-05-10", "day": "Sun", "person": "ks" },
-  { "date": "2026-05-11", "day": "Mon", "person": "sm" },
-  { "date": "2026-05-12", "day": "Tue", "person": "ps" },
-  { "date": "2026-05-13", "day": "Wed", "person": "mp" },
-  { "date": "2026-05-14", "day": "Thu", "person": "ks" },
-  { "date": "2026-05-15", "day": "Fri", "person": "cp" },
-  { "date": "2026-05-16", "day": "Sat", "person": "ks" },
-  { "date": "2026-05-17", "day": "Sun", "person": "ps" },
-  { "date": "2026-05-18", "day": "Mon", "person": "ks", "swapped": true },
-  { "date": "2026-05-19", "day": "Tue", "person": "ps" },
-  { "date": "2026-05-20", "day": "Wed", "person": "mp" },
-  { "date": "2026-05-21", "day": "Thu", "person": "ks" },
-  { "date": "2026-05-22", "day": "Fri", "person": "cp" },
-  { "date": "2026-05-23", "day": "Sat", "person": "mp" },
-  { "date": "2026-05-24", "day": "Sun", "person": "mp" },
-  { "date": "2026-05-25", "day": "Mon", "person": "ks", "swapped": true },
-  { "date": "2026-05-26", "day": "Tue", "person": "ps" },
-  { "date": "2026-05-27", "day": "Wed", "person": "mp" },
-  { "date": "2026-05-28", "day": "Thu", "person": "sm", "swapped": true },
-  { "date": "2026-05-29", "day": "Fri", "person": "cp" },
-  { "date": "2026-05-30", "day": "Sat", "person": "sm" },
-  { "date": "2026-05-31", "day": "Sun", "person": "cp" },
-  { "date": "2026-06-01", "day": "Mon", "person": "cp" },
-  { "date": "2026-06-02", "day": "Tue", "person": "ps" },
-  { "date": "2026-06-03", "day": "Wed", "person": "sm" },
-  { "date": "2026-06-04", "day": "Thu", "person": "mp" },
-  { "date": "2026-06-05", "day": "Fri", "person": "ks" },
-  { "date": "2026-06-06", "day": "Sat", "person": "cp" },
-  { "date": "2026-06-07", "day": "Sun", "person": "mitul/ravi" },
-  { "date": "2026-06-08", "day": "Mon", "person": "cp" },
-  { "date": "2026-06-09", "day": "Tue", "person": "ps" },
-  { "date": "2026-06-10", "day": "Wed", "person": "sm" },
-  { "date": "2026-06-11", "day": "Thu", "person": "mp" },
-  { "date": "2026-06-12", "day": "Fri", "person": "ks" },
-  { "date": "2026-06-13", "day": "Sat", "person": "mitul" },
-  { "date": "2026-06-14", "day": "Sun", "person": "sm" },
-  { "date": "2026-06-15", "day": "Mon", "person": "cp" },
-  { "date": "2026-06-16", "day": "Tue", "person": "ps" },
-  { "date": "2026-06-17", "day": "Wed", "person": "sm" },
-  { "date": "2026-06-18", "day": "Thu", "person": "mp" },
-  { "date": "2026-06-19", "day": "Fri", "person": "ks" },
-  { "date": "2026-06-20", "day": "Sat", "person": "ravi" },
-  { "date": "2026-06-21", "day": "Sun", "person": "ks" },
-  { "date": "2026-06-22", "day": "Mon", "person": "cp" },
-  { "date": "2026-06-23", "day": "Tue", "person": "ps" },
-  { "date": "2026-06-24", "day": "Wed", "person": "sm" },
-  { "date": "2026-06-25", "day": "Thu", "person": "mp" },
-  { "date": "2026-06-26", "day": "Fri", "person": "ks" },
-  { "date": "2026-06-27", "day": "Sat", "person": "ks" },
-  { "date": "2026-06-28", "day": "Sun", "person": "ps" },
-  { "date": "2026-06-29", "day": "Mon", "person": "cp" },
-  { "date": "2026-06-30", "day": "Tue", "person": "ps" }
+  {
+    "date": "2026-04-19",
+    "day": "Sun",
+    "person": "cp"
+  },
+  {
+    "date": "2026-04-20",
+    "day": "Mon",
+    "person": "mp"
+  },
+  {
+    "date": "2026-04-21",
+    "day": "Tue",
+    "person": "ps"
+  },
+  {
+    "date": "2026-04-22",
+    "day": "Wed",
+    "person": "ks",
+    "swapped": true
+  },
+  {
+    "date": "2026-04-23",
+    "day": "Thu",
+    "person": "cp"
+  },
+  {
+    "date": "2026-04-24",
+    "day": "Fri",
+    "person": "sm"
+  },
+  {
+    "date": "2026-04-25",
+    "day": "Sat",
+    "person": "cp"
+  },
+  {
+    "date": "2026-04-26",
+    "day": "Sun",
+    "person": "mitul/ravi"
+  },
+  {
+    "date": "2026-04-27",
+    "day": "Mon",
+    "person": "mp"
+  },
+  {
+    "date": "2026-04-28",
+    "day": "Tue",
+    "person": "ps"
+  },
+  {
+    "date": "2026-04-29",
+    "day": "Wed",
+    "person": "ks"
+  },
+  {
+    "date": "2026-04-30",
+    "day": "Thu",
+    "person": "cp"
+  },
+  {
+    "date": "2026-05-01",
+    "day": "Fri",
+    "person": "sm"
+  },
+  {
+    "date": "2026-05-02",
+    "day": "Sat",
+    "person": "mitul"
+  },
+  {
+    "date": "2026-05-03",
+    "day": "Sun",
+    "person": "sm"
+  },
+  {
+    "date": "2026-05-04",
+    "day": "Mon",
+    "person": "sm"
+  },
+  {
+    "date": "2026-05-05",
+    "day": "Tue",
+    "person": "ps"
+  },
+  {
+    "date": "2026-05-06",
+    "day": "Wed",
+    "person": "mp"
+  },
+  {
+    "date": "2026-05-07",
+    "day": "Thu",
+    "person": "sm",
+    "swapped": true
+  },
+  {
+    "date": "2026-05-08",
+    "day": "Fri",
+    "person": "cp"
+  },
+  {
+    "date": "2026-05-09",
+    "day": "Sat",
+    "person": "ravi"
+  },
+  {
+    "date": "2026-05-10",
+    "day": "Sun",
+    "person": "ks"
+  },
+  {
+    "date": "2026-05-11",
+    "day": "Mon",
+    "person": "sm"
+  },
+  {
+    "date": "2026-05-12",
+    "day": "Tue",
+    "person": "ps"
+  },
+  {
+    "date": "2026-05-13",
+    "day": "Wed",
+    "person": "mp"
+  },
+  {
+    "date": "2026-05-14",
+    "day": "Thu",
+    "person": "ks"
+  },
+  {
+    "date": "2026-05-15",
+    "day": "Fri",
+    "person": "cp"
+  },
+  {
+    "date": "2026-05-16",
+    "day": "Sat",
+    "person": "ks"
+  },
+  {
+    "date": "2026-05-17",
+    "day": "Sun",
+    "person": "ps"
+  },
+  {
+    "date": "2026-05-18",
+    "day": "Mon",
+    "person": "ks",
+    "swapped": true
+  },
+  {
+    "date": "2026-05-19",
+    "day": "Tue",
+    "person": "ps"
+  },
+  {
+    "date": "2026-05-20",
+    "day": "Wed",
+    "person": "mp"
+  },
+  {
+    "date": "2026-05-21",
+    "day": "Thu",
+    "person": "ks"
+  },
+  {
+    "date": "2026-05-22",
+    "day": "Fri",
+    "person": "cp"
+  },
+  {
+    "date": "2026-05-23",
+    "day": "Sat",
+    "person": "mp"
+  },
+  {
+    "date": "2026-05-24",
+    "day": "Sun",
+    "person": "mp"
+  },
+  {
+    "date": "2026-05-25",
+    "day": "Mon",
+    "person": "ks",
+    "swapped": true
+  },
+  {
+    "date": "2026-05-26",
+    "day": "Tue",
+    "person": "ps"
+  },
+  {
+    "date": "2026-05-27",
+    "day": "Wed",
+    "person": "mp"
+  },
+  {
+    "date": "2026-05-28",
+    "day": "Thu",
+    "person": "sm",
+    "swapped": true
+  },
+  {
+    "date": "2026-05-29",
+    "day": "Fri",
+    "person": "cp"
+  },
+  {
+    "date": "2026-05-30",
+    "day": "Sat",
+    "person": "sm"
+  },
+  {
+    "date": "2026-05-31",
+    "day": "Sun",
+    "person": "cp"
+  },
+  {
+    "date": "2026-06-01",
+    "day": "Mon",
+    "person": "cp"
+  },
+  {
+    "date": "2026-06-02",
+    "day": "Tue",
+    "person": "ps"
+  },
+  {
+    "date": "2026-06-03",
+    "day": "Wed",
+    "person": "sm"
+  },
+  {
+    "date": "2026-06-04",
+    "day": "Thu",
+    "person": "mp"
+  },
+  {
+    "date": "2026-06-05",
+    "day": "Fri",
+    "person": "ks"
+  },
+  {
+    "date": "2026-06-06",
+    "day": "Sat",
+    "person": "cp"
+  },
+  {
+    "date": "2026-06-07",
+    "day": "Sun",
+    "person": "mitul/ravi"
+  },
+  {
+    "date": "2026-06-08",
+    "day": "Mon",
+    "person": "cp"
+  },
+  {
+    "date": "2026-06-09",
+    "day": "Tue",
+    "person": "ps"
+  },
+  {
+    "date": "2026-06-10",
+    "day": "Wed",
+    "person": "sm"
+  },
+  {
+    "date": "2026-06-11",
+    "day": "Thu",
+    "person": "mp"
+  },
+  {
+    "date": "2026-06-12",
+    "day": "Fri",
+    "person": "ks"
+  },
+  {
+    "date": "2026-06-13",
+    "day": "Sat",
+    "person": "mitul"
+  },
+  {
+    "date": "2026-06-14",
+    "day": "Sun",
+    "person": "sm"
+  },
+  {
+    "date": "2026-06-15",
+    "day": "Mon",
+    "person": "cp"
+  },
+  {
+    "date": "2026-06-16",
+    "day": "Tue",
+    "person": "ps"
+  },
+  {
+    "date": "2026-06-17",
+    "day": "Wed",
+    "person": "sm"
+  },
+  {
+    "date": "2026-06-18",
+    "day": "Thu",
+    "person": "mp"
+  },
+  {
+    "date": "2026-06-19",
+    "day": "Fri",
+    "person": "ks"
+  },
+  {
+    "date": "2026-06-20",
+    "day": "Sat",
+    "person": "ravi"
+  },
+  {
+    "date": "2026-06-21",
+    "day": "Sun",
+    "person": "ks"
+  },
+  {
+    "date": "2026-06-22",
+    "day": "Mon",
+    "person": "cp"
+  },
+  {
+    "date": "2026-06-23",
+    "day": "Tue",
+    "person": "ps"
+  },
+  {
+    "date": "2026-06-24",
+    "day": "Wed",
+    "person": "sm"
+  },
+  {
+    "date": "2026-06-25",
+    "day": "Thu",
+    "person": "mp"
+  },
+  {
+    "date": "2026-06-26",
+    "day": "Fri",
+    "person": "ks"
+  },
+  {
+    "date": "2026-06-27",
+    "day": "Sat",
+    "person": "ks"
+  },
+  {
+    "date": "2026-06-28",
+    "day": "Sun",
+    "person": "ps"
+  },
+  {
+    "date": "2026-06-29",
+    "day": "Mon",
+    "person": "cp"
+  },
+  {
+    "date": "2026-06-30",
+    "day": "Tue",
+    "person": "ps"
+  }
 ]
