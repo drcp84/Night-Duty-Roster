@@ -27,7 +27,8 @@
   {
     "date": "2026-04-24",
     "day": "Fri",
-    "person": "sm"
+    "person": "ks",
+    "swapped": true
   },
   {
     "date": "2026-04-25",
