@@ -181,7 +181,8 @@
   {
     "date": "2026-05-24",
     "day": "Sun",
-    "person": "mp"
+    "person": "ps",
+    "swapped": true
   },
   {
     "date": "2026-05-25",
