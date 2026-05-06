@@ -98,7 +98,8 @@
   {
     "date": "2026-05-08",
     "day": "Fri",
-    "person": "cp"
+    "person": "sm",
+    "swapped": true
   },
   {
     "date": "2026-05-09",
