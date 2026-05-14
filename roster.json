@@ -302,7 +302,8 @@
   {
     "date": "2026-06-15",
     "day": "Mon",
-    "person": "cp"
+    "person": "mp",
+    "swapped": true
   },
   {
     "date": "2026-06-16",
