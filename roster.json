@@ -244,7 +244,8 @@
   {
     "date": "2026-06-04",
     "day": "Thu",
-    "person": "mp"
+    "person": "cp",
+    "swapped": true
   },
   {
     "date": "2026-06-05",
