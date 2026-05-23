@@ -8,12 +8,7 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Inter', 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
-
-  .header {
-    background: #fff; border-bottom: 1px solid #e2e8f0;
-    padding: 18px 24px 0; position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  }
+  .header { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 18px 24px 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
   .live-row  { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
   .live-left { display: flex; align-items: center; gap: 9px; }
   .live-dot  { width:8px;height:8px;border-radius:50%;background:#ef4444;box-shadow:0 0 6px #ef4444;animation:blink 1.4s infinite;flex-shrink:0; }
@@ -24,7 +19,6 @@
   .month-tabs { display:flex;margin-top:14px; }
   .tab { padding:8px 24px;border:none;border-bottom:3px solid transparent;background:transparent;color:#94a3b8;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;letter-spacing:0.3px;transition:all 0.15s; }
   .tab.active { border-bottom:3px solid #1a56db;color:#1a56db;font-weight:700; }
-
   .legend-wrap { background:#fff;border-bottom:1px solid #e2e8f0;padding:10px 24px 12px; }
   .badges { display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px; }
   .badge { padding:3px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:0.8px;cursor:pointer;transition:all 0.15s;user-select:none;border:1px solid transparent; }
@@ -37,7 +31,6 @@
   .search-input:focus { border-color:#1a56db; }
   .clear-btn { padding:7px 14px;border-radius:10px;border:1.5px solid #e2e8f0;background:#fff;color:#64748b;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:none; }
   .duty-count { font-size:12px;color:#94a3b8;font-weight:500;display:none; }
-
   .table-wrap { padding:20px 24px 24px; }
   .table-card { background:#fff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.05); }
   .col-header { display:grid;grid-template-columns:100px 58px 1fr;padding:9px 16px;background:#f1f5f9;border-bottom:1px solid #e2e8f0;font-size:10px;letter-spacing:2px;color:#94a3b8;font-weight:700;text-transform:uppercase; }
@@ -66,8 +59,6 @@
   .wa-btn { display:flex;align-items:center;gap:8px;padding:11px 22px;border-radius:12px;background:#25D366;color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 2px 8px rgba(37,211,102,0.3);transition:all 0.2s; }
   .wa-btn.copied { background:#16a34a; }
   .wa-hint { font-size:11px;color:#94a3b8;line-height:1.6; }
-
-  /* ── ADMIN OVERLAY ── */
   .overlay { display:none;position:fixed;inset:0;z-index:200;background:rgba(15,23,42,0.55);backdrop-filter:blur(4px);align-items:flex-end;justify-content:center; }
   .overlay.open { display:flex; }
   .admin-sheet { background:#fff;width:100%;max-width:480px;border-radius:20px 20px 0 0;padding:24px 24px 36px;box-shadow:0 -8px 40px rgba(0,0,0,0.15);animation:slideUp 0.25s ease;max-height:92vh;overflow-y:auto; }
@@ -75,10 +66,8 @@
   .sheet-handle { width:40px;height:4px;background:#e2e8f0;border-radius:2px;margin:0 auto 20px; }
   .sheet-title  { font-size:16px;font-weight:800;color:#0f172a;margin-bottom:4px; }
   .sheet-sub    { font-size:12px;color:#94a3b8;margin-bottom:20px; }
-
-  .master-screen, .setup-screen, .admin-screen, .pwd-screen { display:none; }
-  .master-screen.active, .setup-screen.active, .admin-screen.active, .pwd-screen.active { display:block; }
-
+  .master-screen,.setup-screen,.admin-screen,.pwd-screen { display:none; }
+  .master-screen.active,.setup-screen.active,.admin-screen.active,.pwd-screen.active { display:block; }
   .field-label { font-size:11px;font-weight:700;color:#64748b;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;margin-top:16px; }
   .field-input { width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:13px;font-family:inherit;color:#0f172a;background:#f8fafc;outline:none;transition:border 0.15s; }
   .field-input:focus { border-color:#1a56db; }
@@ -98,21 +87,13 @@
   .saving-spinner { display:none;width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;animation:spin 0.7s linear infinite;margin:0 auto; }
   .current-duty-box { background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 14px;margin-top:8px;font-size:13px;color:#374151;min-height:42px; }
   .err-text { color:#ef4444;font-size:12px;margin-top:8px;display:none; }
-
   @keyframes blink { 0%,100%{opacity:1;}50%{opacity:0.35;} }
   @keyframes spin  { to{transform:rotate(360deg);} }
-
-  @media(max-width:400px){
-    .header,.legend-wrap,.table-wrap{padding-left:14px;padding-right:14px;}
-    .col-header,.row{grid-template-columns:88px 50px 1fr;padding-left:12px;padding-right:12px;}
-    .tab{padding:8px 14px;font-size:12px;}
-    .admin-sheet{padding:20px 18px 32px;}
-  }
+  @media(max-width:400px){ .header,.legend-wrap,.table-wrap{padding-left:14px;padding-right:14px;} .col-header,.row{grid-template-columns:88px 50px 1fr;padding-left:12px;padding-right:12px;} .tab{padding:8px 14px;font-size:12px;} .admin-sheet{padding:20px 18px 32px;} }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="header">
   <div class="live-row">
     <div class="live-left">
@@ -125,7 +106,6 @@
   <div class="month-tabs" id="monthTabs"></div>
 </div>
 
-<!-- LEGEND + SEARCH -->
 <div class="legend-wrap">
   <div class="badges" id="badges"></div>
   <div class="search-row">
@@ -138,7 +118,6 @@
   </div>
 </div>
 
-<!-- TABLE -->
 <div class="table-wrap">
   <div class="table-card">
     <div class="col-header"><div>Date</div><div>Day</div><div>On Duty</div></div>
@@ -152,44 +131,43 @@
   </div>
 </div>
 
-<!-- ADMIN OVERLAY -->
 <div class="overlay" id="overlay">
   <div class="admin-sheet">
     <div class="sheet-handle"></div>
 
-    <!-- SCREEN 1: MASTER PASSWORD -->
-    <div class="master-screen active" id="masterScreen">
-      <div class="sheet-title">🔐 Admin Access</div>
-      <div class="sheet-sub">Enter master password to continue</div>
+    <!-- SCREEN 1: MASTER PASSWORD — shown only on unregistered device -->
+    <div class="master-screen" id="masterScreen">
+      <div class="sheet-title">🔐 New Device Setup</div>
+      <div class="sheet-sub">Enter master password to register this device</div>
       <div class="field-label">Master Password</div>
       <input class="field-input" id="masterPwdInput" type="password" placeholder="Enter master password" autocomplete="off" />
-      <div class="err-text" id="masterErr">Wrong master password. Try again.</div>
+      <div class="err-text" id="masterErr">Wrong password. Access denied.</div>
       <button class="btn-primary" id="masterSubmit">Continue</button>
       <button class="btn-secondary" onclick="closeAdmin()">Cancel</button>
     </div>
 
-    <!-- SCREEN 2: PERSONAL PASSWORD (daily login) -->
-    <div class="pwd-screen" id="pwdScreen">
-      <div class="sheet-title">🔑 Your Password</div>
-      <div class="sheet-sub">Enter your personal password</div>
-      <div class="field-label">Password</div>
-      <input class="field-input" id="pwdInput" type="password" placeholder="Enter your password" autocomplete="off" />
-      <div class="err-text" id="pwdError">Wrong password. Try again.</div>
-      <button class="btn-primary" id="pwdSubmit">Continue</button>
+    <!-- SCREEN 2: SETUP — token + own password, after master clears -->
+    <div class="setup-screen" id="setupScreen">
+      <div class="sheet-title">⚙️ Setup Your Access</div>
+      <div class="sheet-sub">One time only on this device</div>
+      <div class="field-label">Your GitHub Token</div>
+      <div class="info-box">GitHub → Settings → Developer settings → Fine-grained tokens → Create token with Contents: Read & Write on Night-Duty-Roster only</div>
+      <input class="field-input" id="tokenInput" type="password" placeholder="github_pat_xxxx or ghp_xxxx" autocomplete="off" style="margin-top:8px" />
+      <div class="field-label">Set Your Own Password</div>
+      <input class="field-input" id="newPwdInput" type="password" placeholder="Choose a password for daily use" autocomplete="off" />
+      <div class="warn-box">⚠️ Token stored only on this device. Each person needs their own token.</div>
+      <button class="btn-primary" id="saveSetup">Save & Open Admin</button>
       <button class="btn-secondary" onclick="closeAdmin()">Cancel</button>
     </div>
 
-    <!-- SCREEN 3: FIRST TIME SETUP -->
-    <div class="setup-screen" id="setupScreen">
-      <div class="sheet-title">⚙️ First Time Setup</div>
-      <div class="sheet-sub">Do this once on this device</div>
-      <div class="field-label">Step 1 — Paste Your GitHub Token</div>
-      <div class="info-box">Get it from GitHub → Settings → Developer settings → Fine-grained tokens</div>
-      <input class="field-input" id="tokenInput" type="password" placeholder="github_pat_xxxx or ghp_xxxx" autocomplete="off" style="margin-top:8px" />
-      <div class="field-label">Step 2 — Set Your Personal Password</div>
-      <input class="field-input" id="newPwdInput" type="password" placeholder="Choose a password (you only)" autocomplete="off" />
-      <div class="warn-box">⚠️ Token stored only on this device. Each person needs their own token.</div>
-      <button class="btn-primary" id="saveSetup">Save & Open Admin</button>
+    <!-- SCREEN 3: OWN PASSWORD — shown every time on registered device -->
+    <div class="pwd-screen" id="pwdScreen">
+      <div class="sheet-title">🔑 Admin Access</div>
+      <div class="sheet-sub">Enter your password to continue</div>
+      <div class="field-label">Your Password</div>
+      <input class="field-input" id="pwdInput" type="password" placeholder="Enter your password" autocomplete="off" />
+      <div class="err-text" id="pwdError">Wrong password. Try again.</div>
+      <button class="btn-primary" id="pwdSubmit">Continue</button>
       <button class="btn-secondary" onclick="closeAdmin()">Cancel</button>
     </div>
 
@@ -222,7 +200,7 @@
         <div class="saving-spinner" id="savingSpinner"></div>
         <span id="saveBtnText">Save Change</span>
       </button>
-      <button class="btn-danger" id="logoutBtn">🔒 Lock Admin</button>
+      <button class="btn-danger" id="logoutBtn">🔒 Remove My Access</button>
       <button class="btn-secondary" onclick="closeAdmin()">Close</button>
     </div>
 
@@ -230,16 +208,15 @@
 </div>
 
 <script>
-// ── CONFIG ──
 const GITHUB_USER     = "drcp84";
 const GITHUB_REPO     = "Night-Duty-Roster";
 const GITHUB_FILE     = "roster.json";
 const DATA_URL        = "https://raw.githubusercontent.com/"+GITHUB_USER+"/"+GITHUB_REPO+"/main/"+GITHUB_FILE;
 const ADMIN_PWD_KEY   = "ndr_pwd_hash";
 const ADMIN_TOKEN_KEY = "ndr_token";
-// Master password hash is computed on load
-let MASTER_HASH = "";
+const DEVICE_REG_KEY  = "ndr_registered"; // set to "1" once master password verified
 
+let MASTER_HASH = "";
 const COLORS = {
   "cp":{"bg":"#e8f0fe","accent":"#1a56db","text":"#1e40af"},
   "mp":{"bg":"#e6f4ea","accent":"#188038","text":"#166534"},
@@ -268,10 +245,9 @@ async function hashStr(str){
   return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
 }
 
-// Pre-compute master hash on load
+// Pre-compute master hash
 hashStr("Chintan@123").then(h=>{ MASTER_HASH=h; });
 
-// ── ROSTER ──
 function buildConsecutive(){
   const map={};
   ROSTER_DATA.forEach(e=>map[e.date]=e.person);
@@ -375,7 +351,7 @@ function renderRows(){
 function renderAll(){renderTabs();refreshBadgeStyles();renderRows();}
 function scrollToToday(){setTimeout(()=>{const el=document.getElementById("today-row");if(el)el.scrollIntoView({behavior:"smooth",block:"center"});},100);}
 
-// ── WHATSAPP (no [swapped] tag) ──
+// ── WHATSAPP ──
 function buildWeekMsg(){
   const d=new Date(today),dow=d.getDay();
   const sun=new Date(d);sun.setDate(d.getDate()-dow);
@@ -414,36 +390,49 @@ function closeAdmin(){
   document.getElementById("overlay").classList.remove("open");
   document.getElementById("successBox").style.display="none";
 }
+
 function openAdmin(){
-  // Reset inputs
-  document.getElementById("masterPwdInput").value="";
-  document.getElementById("masterErr").style.display="none";
-  document.getElementById("pwdInput").value="";
-  document.getElementById("pwdError").style.display="none";
+  // Reset all inputs and errors
+  ["masterPwdInput","pwdInput","tokenInput","newPwdInput"].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value="";
+  });
+  ["masterErr","pwdError"].forEach(id=>{
+    document.getElementById(id).style.display="none";
+  });
   document.getElementById("overlay").classList.add("open");
-  // Always start at master password screen
-  showScreen("masterScreen");
-  setTimeout(()=>document.getElementById("masterPwdInput").focus(),200);
+
+  const isRegistered = localStorage.getItem(DEVICE_REG_KEY) === "1";
+  const hasToken     = !!localStorage.getItem(ADMIN_TOKEN_KEY);
+  const hasPwd       = !!localStorage.getItem(ADMIN_PWD_KEY);
+
+  if(!isRegistered){
+    // New device — ask master password first
+    showScreen("masterScreen");
+    setTimeout(()=>document.getElementById("masterPwdInput").focus(),200);
+  } else if(!hasToken || !hasPwd){
+    // Registered but setup incomplete (e.g. after logout)
+    showScreen("setupScreen");
+  } else {
+    // Registered + setup done — ask own password only
+    showScreen("pwdScreen");
+    setTimeout(()=>document.getElementById("pwdInput").focus(),200);
+  }
 }
+
 document.getElementById("adminTrigger").onclick=openAdmin;
 document.getElementById("overlay").onclick=function(e){if(e.target===this)closeAdmin();};
 
-// ── SCREEN 1: Master Password ──
+// ── MASTER PASSWORD (only on new device) ──
 document.getElementById("masterSubmit").onclick=async function(){
   const val=document.getElementById("masterPwdInput").value;
   if(!val)return;
   const h=await hashStr(val);
   if(h===MASTER_HASH){
+    // Mark device as registered — master never asked again
+    localStorage.setItem(DEVICE_REG_KEY,"1");
     document.getElementById("masterErr").style.display="none";
-    // Passed master — now check if this device is set up
-    const hasToken=!!localStorage.getItem(ADMIN_TOKEN_KEY);
-    const hasPwd=!!localStorage.getItem(ADMIN_PWD_KEY);
-    if(!hasToken||!hasPwd){
-      showScreen("setupScreen");
-    } else {
-      showScreen("pwdScreen");
-      setTimeout(()=>document.getElementById("pwdInput").focus(),200);
-    }
+    // Go to setup
+    showScreen("setupScreen");
   } else {
     document.getElementById("masterErr").style.display="block";
     document.getElementById("masterPwdInput").value="";
@@ -451,7 +440,19 @@ document.getElementById("masterSubmit").onclick=async function(){
 };
 document.getElementById("masterPwdInput").addEventListener("keydown",function(e){if(e.key==="Enter")document.getElementById("masterSubmit").click();});
 
-// ── SCREEN 2: Personal Password ──
+// ── SETUP (once per device) ──
+document.getElementById("saveSetup").onclick=async function(){
+  const token=document.getElementById("tokenInput").value.trim();
+  const pwd=document.getElementById("newPwdInput").value.trim();
+  if(!token||!pwd){alert("Please fill both fields.");return;}
+  if(!token.startsWith("ghp_")&&!token.startsWith("github_pat_")){alert("Token looks invalid. Should start with ghp_ or github_pat_");return;}
+  const hash=await hashStr(pwd);
+  localStorage.setItem(ADMIN_TOKEN_KEY,token);
+  localStorage.setItem(ADMIN_PWD_KEY,hash);
+  openAdminPanel();
+};
+
+// ── OWN PASSWORD (every time on registered device) ──
 document.getElementById("pwdSubmit").onclick=async function(){
   const pwd=document.getElementById("pwdInput").value;
   if(!pwd)return;
@@ -467,23 +468,10 @@ document.getElementById("pwdSubmit").onclick=async function(){
 };
 document.getElementById("pwdInput").addEventListener("keydown",function(e){if(e.key==="Enter")document.getElementById("pwdSubmit").click();});
 
-// ── SCREEN 3: Setup ──
-document.getElementById("saveSetup").onclick=async function(){
-  const token=document.getElementById("tokenInput").value.trim();
-  const pwd=document.getElementById("newPwdInput").value.trim();
-  if(!token||!pwd){alert("Please fill both token and password.");return;}
-  if(!token.startsWith("ghp_")&&!token.startsWith("github_pat_")){alert("Token looks invalid. Should start with ghp_ or github_pat_");return;}
-  const hash=await hashStr(pwd);
-  localStorage.setItem(ADMIN_TOKEN_KEY,token);
-  localStorage.setItem(ADMIN_PWD_KEY,hash);
-  openAdminPanel();
-};
-
-// ── SCREEN 4: Admin Panel ──
+// ── ADMIN PANEL ──
 function openAdminPanel(){
   showScreen("adminScreen");
   document.getElementById("successBox").style.display="none";
-  // Populate date dropdown — default to today
   const sel=document.getElementById("adminDateSelect");
   sel.innerHTML="";
   ROSTER_DATA.forEach(e=>{
@@ -493,7 +481,6 @@ function openAdminPanel(){
     if(e.date===today)opt.selected=true;
     sel.appendChild(opt);
   });
-  // Trigger change to show current duty for today
   sel.dispatchEvent(new Event("change"));
 }
 
@@ -544,11 +531,13 @@ document.getElementById("saveDutyBtn").onclick=async function(){
   }
 };
 
+// Remove access — clears token, password AND registration from this device
 document.getElementById("logoutBtn").onclick=function(){
   localStorage.removeItem(ADMIN_TOKEN_KEY);
   localStorage.removeItem(ADMIN_PWD_KEY);
+  localStorage.removeItem(DEVICE_REG_KEY);
   closeAdmin();
-  alert("Admin locked. Setup required next time on this device.");
+  alert("Access removed from this device. Master password will be required again.");
 };
 
 // ── FETCH ROSTER ──
