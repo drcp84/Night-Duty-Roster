@@ -183,6 +183,7 @@
     "person": "mp"
   },
   {
+    "rotaB": "avani",
     "dnb": "tanmay",
     "date": "2026-05-24",
     "day": "Sun",
@@ -190,6 +191,7 @@
     "swapped": true
   },
   {
+    "rotaB": "mitul",
     "dnb": "ravinita",
     "date": "2026-05-25",
     "day": "Mon",
@@ -197,18 +199,21 @@
     "swapped": true
   },
   {
+    "rotaB": "tejasvini",
     "dnb": "jay",
     "date": "2026-05-26",
     "day": "Tue",
     "person": "ps"
   },
   {
+    "rotaB": "anuradha",
     "dnb": "jay",
     "date": "2026-05-27",
     "day": "Wed",
     "person": "mp"
   },
   {
+    "rotaB": "ravi",
     "dnb": "ravinita",
     "date": "2026-05-28",
     "day": "Thu",
@@ -216,6 +221,7 @@
     "swapped": true
   },
   {
+    "rotaB": "ravi",
     "dnb": "jay",
     "date": "2026-05-29",
     "day": "Fri",
@@ -223,6 +229,7 @@
     "swapped": true
   },
   {
+    "rotaB": "kena",
     "dnb": "tanmay",
     "date": "2026-05-30",
     "day": "Sat",
