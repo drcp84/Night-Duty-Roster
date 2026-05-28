@@ -236,37 +236,44 @@
     "person": "sm"
   },
   {
+    "rotaB": "avani",
     "date": "2026-05-31",
     "day": "Sun",
     "person": "cp"
   },
   {
+    "rotaB": "mitul",
     "date": "2026-06-01",
     "day": "Mon",
     "person": "cp"
   },
   {
+    "rotaB": "tejasvini",
     "date": "2026-06-02",
     "day": "Tue",
     "person": "ps"
   },
   {
+    "rotaB": "anuradha",
     "date": "2026-06-03",
     "day": "Wed",
     "person": "sm"
   },
   {
+    "rotaB": "ravi",
     "date": "2026-06-04",
     "day": "Thu",
     "person": "cp",
     "swapped": true
   },
   {
+    "rotaB": "ravi",
     "date": "2026-06-05",
     "day": "Fri",
     "person": "ks"
   },
   {
+    "rotaB": "kena",
     "date": "2026-06-06",
     "day": "Sat",
     "person": "cp"
