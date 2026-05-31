@@ -244,43 +244,44 @@
     "person": "cp"
   },
   {
-    "rotaB": "mitul",
+    "rotaB": "abc",
     "date": "2026-06-01",
     "day": "Mon",
     "person": "cp"
   },
   {
-    "rotaB": "tejasvini",
+    "rotaB": "abc",
     "date": "2026-06-02",
     "day": "Tue",
     "person": "ps"
   },
   {
-    "rotaB": "anuradha",
+    "rotaB": "abc",
     "date": "2026-06-03",
     "day": "Wed",
     "person": "sm"
   },
   {
-    "rotaB": "ravi",
+    "rotaB": "abc",
     "date": "2026-06-04",
     "day": "Thu",
     "person": "cp",
     "swapped": true
   },
   {
-    "rotaB": "ravi",
+    "rotaB": "abc",
     "date": "2026-06-05",
     "day": "Fri",
     "person": "ks"
   },
   {
-    "rotaB": "kena",
+    "rotaB": "abc",
     "date": "2026-06-06",
     "day": "Sat",
     "person": "cp"
   },
   {
+    "rotaB": "abc",
     "date": "2026-06-07",
     "day": "Sun",
     "person": "mitul/ravi"
