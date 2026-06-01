@@ -245,24 +245,28 @@
   },
   {
     "rotaB": "mitul",
+    "dnb": "jay",
     "date": "2026-06-01",
     "day": "Mon",
     "person": "cp"
   },
   {
     "rotaB": "avani",
+    "dnb": "tanmay",
     "date": "2026-06-02",
     "day": "Tue",
     "person": "ps"
   },
   {
     "rotaB": "anuradha",
+    "dnb": "ravinita",
     "date": "2026-06-03",
     "day": "Wed",
     "person": "sm"
   },
   {
     "rotaB": "tejasvini",
+    "dnb": "tanmay",
     "date": "2026-06-04",
     "day": "Thu",
     "person": "cp",
@@ -270,18 +274,21 @@
   },
   {
     "rotaB": "ravi",
+    "dnb": "ravinita",
     "date": "2026-06-05",
     "day": "Fri",
     "person": "ks"
   },
   {
     "rotaB": "pooja",
+    "dnb": "tanmay",
     "date": "2026-06-06",
     "day": "Sat",
     "person": "cp"
   },
   {
     "rotaB": "kena",
+    "dnb": "ravinita",
     "date": "2026-06-07",
     "day": "Sun",
     "person": "mitul/ravi"
