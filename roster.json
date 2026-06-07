@@ -294,38 +294,45 @@
     "person": "mitul/ravi"
   },
   {
+    "dnb": "jay",
     "date": "2026-06-08",
     "day": "Mon",
     "person": "cp"
   },
   {
+    "dnb": "ravinita",
     "date": "2026-06-09",
     "day": "Tue",
     "person": "ps"
   },
   {
+    "dnb": "tanmay",
     "date": "2026-06-10",
     "day": "Wed",
     "person": "sm"
   },
   {
+    "dnb": "jay",
     "date": "2026-06-11",
     "day": "Thu",
     "person": "cp",
     "swapped": true
   },
   {
+    "dnb": "ravinita",
     "date": "2026-06-12",
     "day": "Fri",
     "person": "ks"
   },
   {
+    "dnb": "jay",
     "date": "2026-06-13",
     "day": "Sat",
     "person": "sm",
     "swapped": true
   },
   {
+    "dnb": "tanmay",
     "date": "2026-06-14",
     "day": "Sun",
     "person": "sm"
