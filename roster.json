@@ -294,24 +294,28 @@
     "person": "mitul/ravi"
   },
   {
+    "rotaB": "kena",
     "dnb": "jay",
     "date": "2026-06-08",
     "day": "Mon",
     "person": "cp"
   },
   {
+    "rotaB": "pooja",
     "dnb": "ravinita",
     "date": "2026-06-09",
     "day": "Tue",
     "person": "ps"
   },
   {
+    "rotaB": "tejasvini",
     "dnb": "tanmay",
     "date": "2026-06-10",
     "day": "Wed",
     "person": "sm"
   },
   {
+    "rotaB": "mitul",
     "dnb": "jay",
     "date": "2026-06-11",
     "day": "Thu",
@@ -319,12 +323,14 @@
     "swapped": true
   },
   {
+    "rotaB": "ravi",
     "dnb": "ravinita",
     "date": "2026-06-12",
     "day": "Fri",
     "person": "ks"
   },
   {
+    "rotaB": "avani",
     "dnb": "jay",
     "date": "2026-06-13",
     "day": "Sat",
@@ -332,6 +338,7 @@
     "swapped": true
   },
   {
+    "rotaB": "anuradha",
     "dnb": "tanmay",
     "date": "2026-06-14",
     "day": "Sun",
