@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>Night Emergency Roster</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; min-height: 100vh; }
+
+  /* HEADER */
+  .header { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 14px 16px 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .live-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
+  .live-left { display: flex; align-items: center; gap: 7px; }
+  .live-dot { width:8px;height:8px;border-radius:50%;background:#ef4444;box-shadow:0 0 6px #ef4444;animation:blink 1.4s infinite;flex-shrink:0; }
+  .live-label { font-size:10px;letter-spacing:2px;color:#ef4444;font-weight:700;text-transform:uppercase; }
+  .header-right { display:flex;align-items:center;gap:6px; }
+  .admin-trigger { font-size:16px;background:none;border:none;cursor:pointer;opacity:0.25;transition:opacity 0.2s;padding:4px; }
+  .admin-trigger:hover { opacity:0.6; }
+  .add-trigger { font-size:20px;font-weight:900;background:none;border:none;cursor:pointer;color:#1a56db;opacity:0.7;transition:opacity 0.2s;padding:4px 6px;line-height:1; }
+  .add-trigger:hover { opacity:1; }
+  .header-title { font-size:16px;font-weight:800;color:#0f172a;letter-spacing:-0.3px; }
+  .month-tabs { display:flex;margin-top:10px;overflow-x:auto;scrollbar-width:none; }
+  .month-tabs::-webkit-scrollbar { display:none; }
+  .tab { padding:7px 16px;border:none;border-bottom:3px solid transparent;background:transparent;color:#94a3b8;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;letter-spacing:0.3px;transition:all 0.15s;flex-shrink:0; }
+  .tab.active { border-bottom:3px solid #1a56db;color:#1a56db;font-weight:700; }
+
+  /* LEGEND */
+  .legend-wrap { background:#fff;border-bottom:1px solid #e2e8f0;padding:8px 16px 10px; }
+  .badges { display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px; }
+  .badge { padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.6px;cursor:pointer;transition:all 0.15s;user-select:none;border:1px solid transparent; }
+  .badge-btb  { background:#fdf2f8;color:#be185d;border-color:#fbcfe8;cursor:default; }
+  .badge-swap { background:#fff7ed;color:#c2410c;border-color:#fed7aa;cursor:default; }
+  .legend-signs { font-size:10px;color:#64748b;margin-bottom:8px;line-height:1.7; }
+  .legend-signs span { font-weight:700; }
+  .search-row { display:flex;align-items:center;gap:8px; }
+  .search-wrap { position:relative;flex:1; }
+  .search-icon { position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:12px;color:#94a3b8;pointer-events:none; }
+  .search-input { width:100%;padding:7px 10px 7px 30px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:12px;font-family:inherit;color:#0f172a;background:#f8fafc;outline:none;transition:border 0.15s; }
+  .search-input:focus { border-color:#1a56db; }
+  .clear-btn { padding:6px 10px;border-radius:10px;border:1.5px solid #e2e8f0;background:#fff;color:#64748b;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;display:none;white-space:nowrap; }
+  .duty-count { font-size:11px;color:#94a3b8;font-weight:500;display:none;white-space:nowrap; }
+
+  /* TABLE */
+  .table-wrap { padding:14px 12px 20px; }
+  .table-card { background:#fff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.05); }
+
+  /* 4-column grid: Date | Day | Rota-A | Rota-B | DNB */
+  .col-header { display:grid;grid-template-columns:72px 30px 1fr 1fr 1fr;padding:7px 10px;background:#f1f5f9;border-bottom:1px solid #e2e8f0;font-size:9px;letter-spacing:1.5px;color:#94a3b8;font-weight:700;text-transform:uppercase;gap:2px; }
+  .col-header div:nth-child(3),
+  .col-header div:nth-child(4),
+  .col-header div:nth-child(5) { text-align:center; }
+  .row { display:grid;grid-template-columns:72px 30px 1fr 1fr 1fr;padding:9px 10px;border-bottom:1px solid #f1f5f9;border-left:4px solid transparent;align-items:center;background:#fff;gap:2px; }
+  .row:last-child { border-bottom:none; }
+  .row.today   { background:#eff6ff;border-left-color:#1a56db; }
+  .row.consec  { background:#fdf2f8;border-left-color:#f472b6; }
+  .row.swapped { background:#fff7ed;border-left-color:#f97316; }
+  .row.weekend { background:#fafafa; }
+
+  /* Date+Day — tighter gap, slightly bigger font */
+  .date-cell { display:flex;flex-direction:column;gap:0px; }
+  .date-text { font-size:12px;font-weight:600;color:#374151;white-space:nowrap; }
+  .date-text.today { font-weight:800;color:#1a56db; }
+  .today-badge { font-size:8px;background:#1a56db;color:#fff;padding:1px 5px;border-radius:6px;font-weight:700;letter-spacing:0.8px;width:fit-content;margin-top:1px; }
+  .day-cell { font-size:11px;font-weight:700;letter-spacing:0.3px;color:#9ca3af; }
+  .day-cell.weekend { color:#ea580c; }
+
+  /* Person cell — centered, fixed sign slot so name never jumps */
+  .person-cell { display:flex;flex-direction:column;align-items:center;min-width:0;gap:0; }
+  .person-badge { display:block;padding:3px 6px;border-radius:14px;font-size:12px;font-weight:700;letter-spacing:0.4px;border:1px solid transparent;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;text-align:center; }
+  .person-badge.empty { background:#f8fafc;color:#cbd5e1;border-color:#e2e8f0;font-size:10px;letter-spacing:0; }
+  /* Fixed-height sign slot — always 12px tall so name never shifts up/down */
+  .sign-slot { height:12px;display:flex;align-items:center;justify-content:center; }
+  .sign-label { font-size:9px;font-weight:800;line-height:1; }
+  .sign-btb  { color:#f472b6; }
+  .sign-swap { color:#ea580c; }
+
+  .empty-msg  { padding:24px 16px;text-align:center;color:#94a3b8;font-size:12px; }
+  .loading-screen { display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px 16px;gap:14px; }
+  .spinner { width:32px;height:32px;border-radius:50%;border:3px solid #e2e8f0;border-top-color:#1a56db;animation:spin 0.8s linear infinite; }
+  .loading-text { font-size:12px;color:#94a3b8; }
+  .error-box { margin:16px;padding:16px;border-radius:12px;background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;font-size:12px;line-height:1.7;display:none; }
+
+  /* WHATSAPP */
+  .wa-row { margin-top:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap; }
+  .wa-btn { display:flex;align-items:center;gap:7px;padding:10px 18px;border-radius:12px;background:#25D366;color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 2px 8px rgba(37,211,102,0.3);transition:all 0.2s; }
+  .wa-btn.copied { background:#16a34a; }
+  .wa-hint { font-size:10px;color:#94a3b8;line-height:1.6; }
+
+  /* OVERLAY / SHEET */
+  .overlay { display:none;position:fixed;inset:0;z-index:200;background:rgba(15,23,42,0.55);backdrop-filter:blur(4px);align-items:flex-end;justify-content:center; }
+  .overlay.open { display:flex; }
+  .admin-sheet { background:#fff;width:100%;max-width:480px;border-radius:20px 20px 0 0;padding:20px 20px 32px;box-shadow:0 -8px 40px rgba(0,0,0,0.15);animation:slideUp 0.25s ease;max-height:92vh;overflow-y:auto; }
+  @keyframes slideUp { from{transform:translateY(60px);opacity:0} to{transform:translateY(0);opacity:1} }
+  .sheet-handle { width:40px;height:4px;background:#e2e8f0;border-radius:2px;margin:0 auto 18px; }
+  .sheet-title  { font-size:15px;font-weight:800;color:#0f172a;margin-bottom:3px; }
+  .sheet-sub    { font-size:11px;color:#94a3b8;margin-bottom:16px; }
+
+  /* SCREENS */
+  .master-screen,.setup-screen,.admin-screen,.pwd-screen,.add-menu-screen,.add-entry-screen { display:none; }
+  .master-screen.active,.setup-screen.active,.admin-screen.active,.pwd-screen.active,.add-menu-screen.active,.add-entry-screen.active { display:block; }
+
+  .field-label { font-size:10px;font-weight:700;color:#64748b;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;margin-top:14px; }
+  .field-input { width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:13px;font-family:inherit;color:#0f172a;background:#f8fafc;outline:none;transition:border 0.15s; }
+  .field-input:focus { border-color:#1a56db; }
+  .field-textarea { width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:12px;font-family:inherit;color:#0f172a;background:#f8fafc;outline:none;transition:border 0.15s;resize:vertical;min-height:140px;line-height:1.6; }
+  .field-textarea:focus { border-color:#1a56db; }
+  .field-select { width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:13px;font-family:inherit;color:#0f172a;background:#f8fafc;outline:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;cursor:pointer; }
+  .field-select:focus { border-color:#1a56db; }
+  .check-row { display:flex;align-items:center;gap:10px;margin-top:14px;cursor:pointer; }
+  .check-row input[type=checkbox] { width:18px;height:18px;accent-color:#f97316;cursor:pointer; }
+  .check-label { font-size:12px;color:#374151;font-weight:500; }
+  .btn-primary { width:100%;margin-top:16px;padding:12px;background:#1a56db;color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:background 0.15s; }
+  .btn-primary:hover { background:#1d4ed8; }
+  .btn-primary:disabled { background:#93c5fd;cursor:not-allowed; }
+  .btn-danger    { width:100%;margin-top:8px;padding:10px;background:#fff;color:#ef4444;border:1.5px solid #fecaca;border-radius:12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit; }
+  .btn-secondary { width:100%;margin-top:8px;padding:10px;background:#f1f5f9;color:#64748b;border:none;border-radius:12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit; }
+  .btn-outline-blue { width:100%;margin-top:10px;padding:12px;background:#eff6ff;color:#1a56db;border:1.5px solid #bfdbfe;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:background 0.15s;text-align:center; }
+  .btn-outline-blue:hover { background:#dbeafe; }
+  .btn-outline-purple { width:100%;margin-top:10px;padding:12px;background:#f5f3ff;color:#7c3aed;border:1.5px solid #ddd6fe;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:background 0.15s;text-align:center; }
+  .btn-outline-purple:hover { background:#ede9fe; }
+  .info-box { background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:10px 12px;font-size:11px;color:#1e40af;line-height:1.7;margin-top:4px; }
+  .warn-box { background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:10px 12px;font-size:11px;color:#c2410c;line-height:1.7;margin-top:10px; }
+  .success-box { background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:10px 12px;font-size:11px;color:#15803d;line-height:1.7;margin-top:10px;display:none; }
+  .saving-spinner { display:none;width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;animation:spin 0.7s linear infinite;margin:0 auto; }
+  .current-duty-box { background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;margin-top:6px;font-size:12px;color:#374151;min-height:38px; }
+  .err-text { color:#ef4444;font-size:11px;margin-top:6px;display:none; }
+
+  /* Preview box for parsed schedule */
+  .preview-box { background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px 12px;margin-top:10px;font-size:11px;color:#374151;line-height:1.8;display:none; }
+  .preview-box.ok { border-color:#bbf7d0;background:#f0fdf4; }
+  .preview-box.err { border-color:#fecaca;background:#fef2f2;color:#b91c1c; }
+  .preview-row { display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid #f1f5f9; }
+  .preview-row:last-child { border-bottom:none; }
+  .preview-day { font-weight:700;color:#64748b; }
+  .preview-name { font-weight:700;color:#0f172a; }
+
+  @keyframes blink { 0%,100%{opacity:1;}50%{opacity:0.35;} }
+  @keyframes spin  { to{transform:rotate(360deg);} }
+
+  @media(max-width:380px){
+    .col-header,.row { grid-template-columns:62px 26px 1fr 1fr 1fr; padding-left:8px; padding-right:8px; }
+    .person-badge { font-size:9px; padding:2px 5px; }
+    .date-text { font-size:10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="live-row">
+    <div class="live-left">
+      <div class="live-dot"></div>
+      <span class="live-label">Night Emergency Roster</span>
+    </div>
+    <div class="header-right">
+      <button class="add-trigger" id="addTrigger" title="Add Rota-B / DNB duty">＋</button>
+      <button class="admin-trigger" id="adminTrigger">⚙️</button>
+    </div>
+  </div>
+  <div class="header-title">Duty Schedule &nbsp;·&nbsp; Apr – Jun 2026</div>
+  <div class="month-tabs" id="monthTabs"></div>
+</div>
+
+<div class="legend-wrap">
+  <div class="badges" id="badges"></div>
+  <div class="legend-signs">
+    <span>!</span> Back-to-back &nbsp;&nbsp; <span>⇄</span> Swapped duty
+  </div>
+  <div class="search-row">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="searchInput" type="text" placeholder="Search name..." autocomplete="off" />
+    </div>
+    <button class="clear-btn" id="clearBtn">Clear</button>
+    <span class="duty-count" id="dutyCount"></span>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <div class="table-card">
+    <div class="col-header">
+      <div>Date</div><div>Day</div><div>Rota-A</div><div>Rota-B</div><div>DNB</div>
+    </div>
+    <div id="loadingScreen" class="loading-screen"><div class="spinner"></div><div class="loading-text">Loading roster...</div></div>
+    <div id="rosterBody"></div>
+  </div>
+  <div id="errorBox" class="error-box"></div>
+  <div class="wa-row">
+    <button class="wa-btn" id="waBtn"><span id="waBtnIcon">📋</span><span id="waBtnText">Copy This Week's Duty</span></button>
+    <span class="wa-hint">Copies current week (Sun–Sat)<br>all 3 rotations · WhatsApp ready</span>
+  </div>
+</div>
+
+<!-- ═══════════ OVERLAY ═══════════ -->
+<div class="overlay" id="overlay">
+  <div class="admin-sheet">
+    <div class="sheet-handle"></div>
+
+    <!-- SCREEN 1: MASTER PASSWORD -->
+    <div class="master-screen" id="masterScreen">
+      <div class="sheet-title">🔐 New Device Setup</div>
+      <div class="sheet-sub">Enter master password to register this device</div>
+      <div class="field-label">Master Password</div>
+      <input class="field-input" id="masterPwdInput" type="password" placeholder="Enter master password" autocomplete="off" />
+      <div class="err-text" id="masterErr">Wrong password. Access denied.</div>
+      <button class="btn-primary" id="masterSubmit">Continue</button>
+      <button class="btn-secondary" onclick="closeAdmin()">Cancel</button>
+    </div>
+
+    <!-- SCREEN 2: SETUP -->
+    <div class="setup-screen" id="setupScreen">
+      <div class="sheet-title">⚙️ Setup Your Access</div>
+      <div class="sheet-sub">One time only on this device</div>
+      <div class="field-label">Your GitHub Token</div>
+      <div class="info-box">GitHub → Settings → Developer settings → Fine-grained tokens → Create token with Contents: Read & Write on Night-Duty-Roster only</div>
+      <input class="field-input" id="tokenInput" type="password" placeholder="github_pat_xxxx or ghp_xxxx" autocomplete="off" style="margin-top:8px" />
+      <div class="field-label">Set Your Own Password</div>
+      <input class="field-input" id="newPwdInput" type="password" placeholder="Choose a password for daily use" autocomplete="off" />
+      <div class="warn-box">⚠️ Token stored only on this device. Each person needs their own token.</div>
+      <button class="btn-primary" id="saveSetup">Save & Open Admin</button>
+      <button class="btn-secondary" onclick="closeAdmin()">Cancel</button>
+    </div>
+
+    <!-- SCREEN 3: OWN PASSWORD -->
+    <div class="pwd-screen" id="pwdScreen">
+      <div class="sheet-title">🔑 Admin Access</div>
+      <div class="sheet-sub">Enter your password to continue</div>
+      <div class="field-label">Your Password</div>
+      <input class="field-input" id="pwdInput" type="password" placeholder="Enter your password" autocomplete="off" />
+      <div class="err-text" id="pwdError">Wrong password. Try again.</div>
+      <button class="btn-primary" id="pwdSubmit">Continue</button>
+      <button class="btn-secondary" onclick="closeAdmin()">Cancel</button>
+    </div>
+
+    <!-- SCREEN 4: ADMIN PANEL (Rota-A) -->
+    <div class="admin-screen" id="adminScreen">
+      <div class="sheet-title">⚙️ Change Rota-A Duty</div>
+      <div class="sheet-sub">Select date and assign new person</div>
+      <div class="field-label">Select Date</div>
+      <select class="field-select" id="adminDateSelect"></select>
+      <div class="field-label">Current Duty</div>
+      <div class="current-duty-box" id="currentDutyBox">—</div>
+      <div class="field-label">Assign To</div>
+      <select class="field-select" id="adminPersonSelect">
+        <option value="">-- Pick a person --</option>
+        <option value="cp">CP</option>
+        <option value="mp">MP</option>
+        <option value="ks">KS</option>
+        <option value="sm">SM</option>
+        <option value="ps">PS</option>
+        <option value="ravi">RAVI</option>
+        <option value="mitul">MITUL</option>
+        <option value="mitul/ravi">MITUL/RAVI</option>
+      </select>
+      <label class="check-row">
+        <input type="checkbox" id="swapCheck" />
+        <span class="check-label">🔁 Mark as Swapped duty</span>
+      </label>
+      <div class="success-box" id="successBox">✅ Duty updated! Refresh page to confirm.</div>
+      <button class="btn-primary" id="saveDutyBtn">
+        <div class="saving-spinner" id="savingSpinner"></div>
+        <span id="saveBtnText">Save Change</span>
+      </button>
+      <button class="btn-danger" id="logoutBtn">🔒 Remove My Access</button>
+      <button class="btn-secondary" onclick="closeAdmin()">Close</button>
+    </div>
+
+    <!-- SCREEN 5: ADD MENU (choose Rota-B or DNB) -->
+    <div class="add-menu-screen" id="addMenuScreen">
+      <div class="sheet-title">＋ Add Weekly Duty</div>
+      <div class="sheet-sub">Choose which rotation to update</div>
+      <button class="btn-outline-blue" id="goRotaB">📋 Add / Update Rota-B Schedule</button>
+      <button class="btn-outline-purple" id="goDNB">🏥 Add / Update DNB Rota Schedule</button>
+      <button class="btn-secondary" onclick="closeAdmin()">Cancel</button>
+    </div>
+
+    <!-- SCREEN 6: ADD ENTRY (paste raw message) -->
+    <div class="add-entry-screen" id="addEntryScreen">
+      <div class="sheet-title" id="addEntryTitle">Add Rota-B Schedule</div>
+      <div class="sheet-sub">Paste the weekly WhatsApp message below</div>
+
+      <div class="field-label">Pick Start Date — duties placed on next occurrence of each day from this date</div>
+      <input class="field-input" id="weekStartInput" type="date" />
+
+      <div class="field-label">Paste Raw Message</div>
+      <div class="info-box" style="margin-bottom:6px">Format: <strong>Mon : Name</strong> (one per line). Works with any header text above.</div>
+      <textarea class="field-textarea" id="rawMsgInput" placeholder="Dnb emergency:&#10;&#10;Mon : ravinita&#10;Tue : jay&#10;Wed : jay&#10;Thur : ravinita&#10;Fri : jay&#10;Sat : tanmay&#10;Sund : tanmay"></textarea>
+
+      <div class="preview-box" id="previewBox"></div>
+
+      <button class="btn-primary" id="parseBtn">🔍 Preview Parsed Schedule</button>
+      <div class="success-box" id="addSuccessBox">✅ Schedule saved! Refresh page to confirm.</div>
+      <button class="btn-primary" id="saveEntryBtn" style="display:none;background:#16a34a">
+        <div class="saving-spinner" id="savingSpinner2"></div>
+        <span id="saveBtnText2">✅ Confirm &amp; Save to GitHub</span>
+      </button>
+      <button class="btn-secondary" id="backToMenuBtn">← Back</button>
+      <button class="btn-secondary" onclick="closeAdmin()">Cancel</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const GITHUB_USER     = "drcp84";
+const GITHUB_REPO     = "Night-Duty-Roster";
+const GITHUB_FILE     = "roster.json";
+const DATA_URL        = "https://raw.githubusercontent.com/"+GITHUB_USER+"/"+GITHUB_REPO+"/main/"+GITHUB_FILE;
+const ADMIN_PWD_KEY   = "ndr_pwd_hash";
+const ADMIN_TOKEN_KEY = "ndr_token";
+const DEVICE_REG_KEY  = "ndr_registered";
+
+let MASTER_HASH = "";
+// Base colours for Rota-A persons
+const COLORS = {
+  "cp":         {"bg":"#e8f0fe","accent":"#1a56db","text":"#1e40af"},
+  "mp":         {"bg":"#e6f4ea","accent":"#188038","text":"#166534"},
+  "ks":         {"bg":"#fff3e0","accent":"#e65100","text":"#9a3412"},
+  "sm":         {"bg":"#f3e8fd","accent":"#7e22ce","text":"#6b21a8"},
+  "ps":         {"bg":"#fce8f3","accent":"#be185d","text":"#9d174d"},
+  "ravi":       {"bg":"#e6fafa","accent":"#0e7490","text":"#155e75"},
+  "mitul":      {"bg":"#fefce8","accent":"#a16207","text":"#854d0e"},
+  "mitul/ravi": {"bg":"#f0fdf4","accent":"#15803d","text":"#14532d"},
+};
+
+// Auto-assign new colours for new names
+const EXTRA_COLORS = [
+  {"bg":"#fef2f2","accent":"#dc2626","text":"#991b1b"},
+  {"bg":"#fff1f2","accent":"#e11d48","text":"#9f1239"},
+  {"bg":"#ecfdf5","accent":"#059669","text":"#065f46"},
+  {"bg":"#f0f9ff","accent":"#0284c7","text":"#0c4a6e"},
+  {"bg":"#fdf4ff","accent":"#a855f7","text":"#6b21a8"},
+  {"bg":"#fffbeb","accent":"#d97706","text":"#92400e"},
+  {"bg":"#f7fee7","accent":"#65a30d","text":"#3f6212"},
+  {"bg":"#fff7f0","accent":"#ea580c","text":"#7c2d12"},
+];
+let extraColorIdx = 0;
+
+function getColor(name) {
+  const key = name.toLowerCase();
+  if (!COLORS[key]) {
+    // Assign a new colour deterministically
+    const assigned = Object.keys(COLORS).length - 8; // offset past built-ins
+    let hash = 0; for (let c of key) hash = (hash*31 + c.charCodeAt(0)) & 0xffff;
+    COLORS[key] = EXTRA_COLORS[hash % EXTRA_COLORS.length];
+  }
+  return COLORS[key];
+}
+
+const MONTH_NAMES  = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const MONTHS_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const DAY_ORDER    = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+let ROSTER_DATA=[], months={}, monthKeys=[], activeMonth="", searchVal="", consecutiveA=new Set(), consecutiveB=new Set(), consecutiveDNB=new Set();
+let addEntryType = ""; // "rotaB" or "dnb"
+let parsedSchedule = null; // {weekDates: {...}, entries: [{date,day,name}]}
+
+function getToday(){
+  const n=new Date();
+  return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");
+}
+const today = getToday();
+function fmtDisplay(d){const[,m,day]=d.split("-");return parseInt(day)+" "+MONTHS_SHORT[parseInt(m)-1];}
+function fmtWA(d){const[,m,day]=d.split("-");return parseInt(day)+"/"+parseInt(m);}
+function fmtDD_M_Day(d){
+  const dt=new Date(d+"T00:00:00");
+  const dd=String(dt.getDate()).padStart(2,"0");
+  const mm=String(dt.getMonth()+1);
+  const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  return dd+"/"+mm+" ("+days[dt.getDay()]+")";
+}
+
+async function hashStr(str){
+  const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+hashStr("Chintan@123").then(h=>{ MASTER_HASH=h; });
+
+// ── CONSECUTIVE DETECTION ──
+function buildConsecutiveFor(field) {
+  const map={};
+  ROSTER_DATA.forEach(e=>{ if(e[field]) map[e.date]=e[field]; });
+  const flagged=new Set();
+  ROSTER_DATA.forEach(e=>{
+    if(!e[field]) return;
+    const norm=p=>p?p.toLowerCase().split("/"):[];
+    const cur=norm(e[field]);
+    const pd=new Date(e.date);pd.setDate(pd.getDate()-1);
+    const nd=new Date(e.date);nd.setDate(nd.getDate()+1);
+    const pp=norm(map[pd.toISOString().slice(0,10)]);
+    const np=norm(map[nd.toISOString().slice(0,10)]);
+    if(cur.some(c=>pp.includes(c))||cur.some(c=>np.includes(c))) flagged.add(e.date);
+  });
+  return flagged;
+}
+function buildAllConsecutive(){
+  consecutiveA   = buildConsecutiveFor("person");
+  consecutiveB   = buildConsecutiveFor("rotaB");
+  consecutiveDNB = buildConsecutiveFor("dnb");
+}
+
+function buildMonths(){
+  const m={};
+  ROSTER_DATA.forEach(e=>{const k=e.date.slice(0,7);if(!m[k])m[k]=[];m[k].push(e);});
+  return m;
+}
+
+// ── TABS ──
+function renderTabs(){
+  const el=document.getElementById("monthTabs");el.innerHTML="";
+  monthKeys.forEach(mk=>{
+    const btn=document.createElement("button");
+    btn.className="tab"+(mk===activeMonth?" active":"");
+    btn.textContent=MONTH_NAMES[parseInt(mk.split("-")[1])-1].toUpperCase();
+    btn.onclick=()=>{activeMonth=mk;searchVal="";document.getElementById("searchInput").value="";renderAll();scrollToToday();};
+    el.appendChild(btn);
+  });
+}
+
+// ── BADGES — collect ALL names from all 3 rotas ──
+function renderBadges(){
+  const el=document.getElementById("badges");el.innerHTML="";
+  const seen=new Set(),persons=[];
+  ROSTER_DATA.forEach(e=>{
+    ["person","rotaB","dnb"].forEach(f=>{
+      if(e[f]) String(e[f]).toLowerCase().split("/").forEach(p=>{
+        p=p.trim();
+        if(p&&!seen.has(p)){seen.add(p);persons.push(p);}
+      });
+    });
+  });
+  // Count duties per person in the active month (across all 3 rotas)
+  function countDutiesInMonth(person){
+    const monthRows=months[activeMonth]||[];
+    let count=0;
+    monthRows.forEach(e=>{
+      ["person","rotaB","dnb"].forEach(f=>{
+        if(e[f]) String(e[f]).toLowerCase().split("/").forEach(p=>{
+          if(p.trim()===person) count++;
+        });
+      });
+    });
+    return count;
+  }
+  persons.forEach(person=>{
+    const col=getColor(person);
+    const span=document.createElement("span");
+    span.className="badge";span.dataset.person=person;
+    const cnt=countDutiesInMonth(person);
+    span.textContent=person.toUpperCase()+(cnt>0?" ("+cnt+")":"");
+    applyBadgeStyle(span,person,col);
+    span.onclick=()=>{
+      const inp=document.getElementById("searchInput");
+      if(searchVal===person){searchVal="";inp.value="";}else{searchVal=person;inp.value=person;}
+      renderAll();
+    };
+    el.appendChild(span);
+  });
+  const btb=document.createElement("span");btb.className="badge badge-btb";btb.textContent="! BACK-TO-BACK";el.appendChild(btb);
+  const sw=document.createElement("span");sw.className="badge badge-swap";sw.textContent="⇄ SWAPPED";el.appendChild(sw);
+}
+function applyBadgeStyle(span,person,col){
+  const active=searchVal===person;
+  span.style.background=active?col.accent:col.bg;
+  span.style.color=active?"#fff":col.text;
+  span.style.borderColor=col.accent+"44";
+}
+function refreshBadgeStyles(){
+  document.querySelectorAll(".badge[data-person]").forEach(span=>{
+    const col=getColor(span.dataset.person);
+    applyBadgeStyle(span,span.dataset.person,col);
+  });
+}
+
+// ── ROWS ──
+function matchesSearch(entry){
+  if(!searchVal) return true;
+  return ["person","rotaB","dnb"].some(f=>
+    entry[f] && entry[f].toLowerCase().split("/").some(p=>p===searchVal||p.startsWith(searchVal))
+  );
+}
+
+function makePersonCell(name, isConsec, isSwapped) {
+  const cell = document.createElement("div");
+  cell.className = "person-cell";
+  const pb = document.createElement("span");
+  pb.className = "person-badge";
+  if (!name) {
+    pb.classList.add("empty");
+    pb.textContent = "—";
+  } else {
+    const col = getColor(name.toLowerCase());
+    pb.textContent = name.toUpperCase();
+    if (isSwapped) {
+      pb.style.background="#ffedd5";pb.style.color="#c2410c";pb.style.borderColor="#fdba74";
+    } else if (isConsec) {
+      pb.style.background="#fce7f3";pb.style.color="#be185d";pb.style.borderColor="#fbcfe8";
+    } else {
+      pb.style.background=col.bg;pb.style.color=col.text;pb.style.borderColor=col.accent+"44";
+    }
+  }
+  cell.appendChild(pb);
+  // Always render a fixed-height sign slot — keeps name position stable
+  const slot = document.createElement("div");
+  slot.className = "sign-slot";
+  if (name && isSwapped) {
+    const l=document.createElement("span");l.className="sign-label sign-swap";l.textContent="⇄";slot.appendChild(l);
+  } else if (name && isConsec) {
+    const l=document.createElement("span");l.className="sign-label sign-btb";l.textContent="!";slot.appendChild(l);
+  }
+  cell.appendChild(slot);
+  return cell;
+}
+
+function renderRows(){
+  const body=document.getElementById("rosterBody");body.innerHTML="";
+  const rows=months[activeMonth]||[];
+  const filtered=searchVal?rows.filter(matchesSearch):rows;
+  const clearBtn=document.getElementById("clearBtn"),dutyCount=document.getElementById("dutyCount");
+  clearBtn.style.display=searchVal?"block":"none";
+  if(searchVal&&filtered.length>0){dutyCount.style.display="block";dutyCount.textContent=filtered.length+" duties";}
+  else dutyCount.style.display="none";
+  if(filtered.length===0){
+    const d=document.createElement("div");d.className="empty-msg";
+    d.textContent='No duties found for "'+searchVal+'" this month.';body.appendChild(d);return;
+  }
+  filtered.forEach((entry,i)=>{
+    const isToday=entry.date===today;
+    const isSwapped=!!entry.swapped;
+    const isConsecA=consecutiveA.has(entry.date);
+    const isConsecB=consecutiveB.has(entry.date);
+    const isConsecDNB=consecutiveDNB.has(entry.date);
+    const isWeekend=entry.day==="Sat"||entry.day==="Sun";
+
+    const row=document.createElement("div");
+    let cls="row";
+    if(isToday) cls+=" today";
+    else if(isSwapped) cls+=" swapped";
+    else if(isConsecA||isConsecB||isConsecDNB) cls+=" consec";
+    else if(isWeekend) cls+=" weekend";
+    row.className=cls;
+    if(isToday&&!searchVal) row.id="today-row";
+
+    // Date cell
+    const dateCell=document.createElement("div");dateCell.className="date-cell";
+    const dateSpan=document.createElement("span");dateSpan.className="date-text"+(isToday?" today":"");dateSpan.textContent=fmtDisplay(entry.date);dateCell.appendChild(dateSpan);
+    if(isToday){const b=document.createElement("span");b.className="today-badge";b.textContent="TODAY";dateCell.appendChild(b);}
+
+    // Day cell
+    const dayCell=document.createElement("div");dayCell.className="day-cell"+(isWeekend?" weekend":"");dayCell.textContent=entry.day.toUpperCase().slice(0,3);
+
+    // Person cells
+    const cellA   = makePersonCell(entry.person||null, isConsecA, isSwapped);
+    const cellB   = makePersonCell(entry.rotaB||null,  isConsecB, false);
+    const cellDNB = makePersonCell(entry.dnb||null,    isConsecDNB, false);
+
+    row.appendChild(dateCell);
+    row.appendChild(dayCell);
+    row.appendChild(cellA);
+    row.appendChild(cellB);
+    row.appendChild(cellDNB);
+    body.appendChild(row);
+  });
+}
+
+function renderAll(){ renderTabs(); renderBadges(); renderRows(); }
+function scrollToToday(){ setTimeout(()=>{ const el=document.getElementById("today-row"); if(el)el.scrollIntoView({behavior:"smooth",block:"center"}); },100); }
+
+// ── WHATSAPP ──
+function buildWeekMsg(){
+  const d=new Date(today),dow=d.getDay();
+  const sun=new Date(d);sun.setDate(d.getDate()-dow);
+  const sat=new Date(sun);sat.setDate(sun.getDate()+6);
+  const toStr=dt=>dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,"0")+"-"+String(dt.getDate()).padStart(2,"0");
+  const start=toStr(sun),end=toStr(sat);
+  const weekRows=ROSTER_DATA.filter(e=>e.date>=start&&e.date<=end);
+  if(!weekRows.length) return "No roster data for current week.";
+  const lines = weekRows.map(e=>{
+    const a = (e.person||"—").toUpperCase();
+    const b = (e.rotaB||"—").toUpperCase();
+    const c = (e.dnb||"—").toUpperCase();
+    return fmtDD_M_Day(e.date)+".. "+a+", "+b+", "+c;
+  });
+  return "🌙 Night Emergency Duty — Week of "+fmtWA(start)+" to "+fmtWA(end)+"\n\n"+lines.join("\n");
+}
+document.getElementById("waBtn").onclick=function(){
+  const msg=buildWeekMsg(),btn=this,icon=document.getElementById("waBtnIcon"),text=document.getElementById("waBtnText");
+  function onSuccess(){btn.classList.add("copied");icon.textContent="✓";text.textContent="Copied!";setTimeout(()=>{btn.classList.remove("copied");icon.textContent="📋";text.textContent="Copy This Week's Duty";},2500);}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(msg).then(onSuccess).catch(()=>fallback(msg,onSuccess));}
+  else fallback(msg,onSuccess);
+};
+function fallback(text,onSuccess){
+  const ta=document.createElement("textarea");ta.value=text;ta.style.cssText="position:fixed;top:0;left:0;opacity:0;pointer-events:none;";
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand("copy");onSuccess();}catch(e){alert("Copy failed:\n\n"+text);}
+  document.body.removeChild(ta);
+}
+
+// ── SEARCH ──
+document.getElementById("searchInput").addEventListener("input",function(){searchVal=this.value.toLowerCase().trim();renderAll();});
+document.getElementById("clearBtn").onclick=function(){searchVal="";document.getElementById("searchInput").value="";renderAll();};
+
+// ── ADMIN SCREEN HELPERS ──
+function showScreen(name){
+  ["masterScreen","pwdScreen","setupScreen","adminScreen","addMenuScreen","addEntryScreen"].forEach(id=>{
+    document.getElementById(id).classList.toggle("active",id===name);
+  });
+}
+function closeAdmin(){
+  document.getElementById("overlay").classList.remove("open");
+  document.getElementById("successBox").style.display="none";
+  document.getElementById("addSuccessBox").style.display="none";
+  parsedSchedule=null;
+  document.getElementById("saveEntryBtn").style.display="none";
+  document.getElementById("previewBox").style.display="none";
+  document.getElementById("previewBox").className="preview-box";
+}
+function openAdmin(){
+  ["masterPwdInput","pwdInput","tokenInput","newPwdInput"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+  ["masterErr","pwdError"].forEach(id=>{document.getElementById(id).style.display="none";});
+  document.getElementById("overlay").classList.add("open");
+  const isRegistered=localStorage.getItem(DEVICE_REG_KEY)==="1";
+  const hasToken=!!localStorage.getItem(ADMIN_TOKEN_KEY);
+  const hasPwd=!!localStorage.getItem(ADMIN_PWD_KEY);
+  if(!isRegistered){showScreen("masterScreen");setTimeout(()=>document.getElementById("masterPwdInput").focus(),200);}
+  else if(!hasToken||!hasPwd){showScreen("setupScreen");}
+  else{showScreen("pwdScreen");setTimeout(()=>document.getElementById("pwdInput").focus(),200);}
+}
+document.getElementById("adminTrigger").onclick=openAdmin;
+document.getElementById("overlay").onclick=function(e){if(e.target===this)closeAdmin();};
+
+// ── ADD TRIGGER (+ button) ──
+document.getElementById("addTrigger").onclick=function(){
+  ["masterPwdInput","pwdInput","tokenInput","newPwdInput"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
+  ["masterErr","pwdError"].forEach(id=>{document.getElementById(id).style.display="none";});
+  document.getElementById("overlay").classList.add("open");
+  const isRegistered=localStorage.getItem(DEVICE_REG_KEY)==="1";
+  const hasToken=!!localStorage.getItem(ADMIN_TOKEN_KEY);
+  const hasPwd=!!localStorage.getItem(ADMIN_PWD_KEY);
+  if(!isRegistered){showScreen("masterScreen");setTimeout(()=>document.getElementById("masterPwdInput").focus(),200);}
+  else if(!hasToken||!hasPwd){showScreen("setupScreen");}
+  else{showScreen("pwdScreen");setTimeout(()=>document.getElementById("pwdInput").focus(),200);}
+  // after login, go to addMenuScreen instead of adminScreen — handled via flag
+  document.getElementById("pwdSubmit").dataset.dest="addMenu";
+};
+
+// ── MASTER PASSWORD ──
+document.getElementById("masterSubmit").onclick=async function(){
+  const val=document.getElementById("masterPwdInput").value;if(!val)return;
+  const h=await hashStr(val);
+  if(h===MASTER_HASH){
+    localStorage.setItem(DEVICE_REG_KEY,"1");
+    document.getElementById("masterErr").style.display="none";
+    showScreen("setupScreen");
+  }else{document.getElementById("masterErr").style.display="block";document.getElementById("masterPwdInput").value="";}
+};
+document.getElementById("masterPwdInput").addEventListener("keydown",function(e){if(e.key==="Enter")document.getElementById("masterSubmit").click();});
+
+// ── SETUP ──
+document.getElementById("saveSetup").onclick=async function(){
+  const token=document.getElementById("tokenInput").value.trim();
+  const pwd=document.getElementById("newPwdInput").value.trim();
+  if(!token||!pwd){alert("Please fill both fields.");return;}
+  if(!token.startsWith("ghp_")&&!token.startsWith("github_pat_")){alert("Token looks invalid.");return;}
+  const hash=await hashStr(pwd);
+  localStorage.setItem(ADMIN_TOKEN_KEY,token);localStorage.setItem(ADMIN_PWD_KEY,hash);
+  const dest=document.getElementById("pwdSubmit").dataset.dest;
+  if(dest==="addMenu"){showScreen("addMenuScreen");}else{openAdminPanel();}
+};
+
+// ── OWN PASSWORD ──
+document.getElementById("pwdSubmit").onclick=async function(){
+  const pwd=document.getElementById("pwdInput").value;if(!pwd)return;
+  const hash=await hashStr(pwd);
+  const stored=localStorage.getItem(ADMIN_PWD_KEY);
+  if(hash===stored){
+    document.getElementById("pwdError").style.display="none";
+    const dest=this.dataset.dest;
+    if(dest==="addMenu"){this.dataset.dest="";showScreen("addMenuScreen");}
+    else{openAdminPanel();}
+  }else{
+    document.getElementById("pwdError").style.display="block";document.getElementById("pwdInput").value="";
+  }
+};
+document.getElementById("pwdInput").addEventListener("keydown",function(e){if(e.key==="Enter")document.getElementById("pwdSubmit").click();});
+
+// ── ADMIN PANEL (Rota-A) ──
+function openAdminPanel(){
+  showScreen("adminScreen");
+  document.getElementById("successBox").style.display="none";
+  const sel=document.getElementById("adminDateSelect");sel.innerHTML="";
+  ROSTER_DATA.forEach(e=>{
+    const opt=document.createElement("option");
+    opt.value=e.date;
+    opt.textContent=fmtDisplay(e.date)+" ("+e.day+") — "+(e.person||"—").toUpperCase()+(e.swapped?" ⇄":"");
+    if(e.date===today)opt.selected=true;
+    sel.appendChild(opt);
+  });
+  sel.dispatchEvent(new Event("change"));
+}
+document.getElementById("adminDateSelect").onchange=function(){
+  const entry=ROSTER_DATA.find(e=>e.date===this.value);
+  const box=document.getElementById("currentDutyBox");
+  if(entry){
+    box.textContent=(entry.person||"—").toUpperCase()+(entry.swapped?" (Swapped)":"");
+    document.getElementById("adminPersonSelect").value=entry.person||"";
+    document.getElementById("swapCheck").checked=!!entry.swapped;
+  }else{box.textContent="—";}
+};
+
+document.getElementById("saveDutyBtn").onclick=async function(){
+  const date=document.getElementById("adminDateSelect").value;
+  const person=document.getElementById("adminPersonSelect").value;
+  const swapped=document.getElementById("swapCheck").checked;
+  if(!date||!person){alert("Please select a date and a person.");return;}
+  const token=localStorage.getItem(ADMIN_TOKEN_KEY);
+  if(!token){alert("Token not found. Please set up again.");showScreen("setupScreen");return;}
+  const entry=ROSTER_DATA.find(e=>e.date===date);
+  if(!entry){alert("Date not found.");return;}
+  entry.person=person;
+  if(swapped)entry.swapped=true;else delete entry.swapped;
+  await pushToGitHub(token,"Duty update (Rota-A): "+date+" → "+person,"saveDutyBtn","savingSpinner","saveBtnText","successBox");
+};
+
+// ── LOGOUT ──
+document.getElementById("logoutBtn").onclick=function(){
+  localStorage.removeItem(ADMIN_TOKEN_KEY);localStorage.removeItem(ADMIN_PWD_KEY);localStorage.removeItem(DEVICE_REG_KEY);
+  closeAdmin();alert("Access removed from this device.");
+};
+
+// ── ADD MENU ──
+document.getElementById("goRotaB").onclick=function(){addEntryType="rotaB";openAddEntry();};
+document.getElementById("goDNB").onclick=function(){addEntryType="dnb";openAddEntry();};
+document.getElementById("backToMenuBtn").onclick=function(){showScreen("addMenuScreen");};
+
+function openAddEntry(){
+  document.getElementById("addEntryTitle").textContent=addEntryType==="rotaB"?"📋 Add Rota-B Schedule":"🏥 Add DNB Rota Schedule";
+  document.getElementById("rawMsgInput").value="";
+  document.getElementById("weekStartInput").value=today;
+  document.getElementById("previewBox").style.display="none";
+  document.getElementById("previewBox").className="preview-box";
+  document.getElementById("saveEntryBtn").style.display="none";
+  document.getElementById("addSuccessBox").style.display="none";
+  parsedSchedule=null;
+  showScreen("addEntryScreen");
+}
+
+// ── PARSE RAW MESSAGE ──
+const DAY_ALIASES = {
+  "mon":"Mon","monday":"Mon",
+  "tue":"Tue","tues":"Tue","tuesday":"Tue",
+  "wed":"Wed","wednesday":"Wed",
+  "thu":"Thu","thur":"Thu","thurs":"Thu","thursday":"Thu",
+  "fri":"Fri","friday":"Fri",
+  "sat":"Sat","saturday":"Sat",
+  "sun":"Sun","sund":"Sun","sunday":"Sun",
+};
+
+function parseRawMessage(raw, weekStartDateStr) {
+  // For each day found in message, find its next occurrence on or after the picked date.
+  // No Sunday-anchoring. Sun-Sat rule is only for WhatsApp copy.
+  const refDate = new Date(weekStartDateStr+"T00:00:00");
+
+  const lines = raw.split(/\n/).map(l=>l.trim()).filter(l=>l);
+  const entries = [];
+  const errors = [];
+
+  lines.forEach(line=>{
+    // Match "Day : Name" or "Day: Name" or "Day Name" or "Day - Name"
+    const m = line.match(/^([a-z]+)[^a-z]+([a-z][a-z\s\-'.]+)$/i);
+    if(!m) return;
+    const dayRaw = m[1].toLowerCase();
+    const name   = m[2].trim().toLowerCase().replace(/\s+$/,"");
+    const dayKey = DAY_ALIASES[dayRaw];
+    if(!dayKey) { errors.push("Unknown day: "+m[1]); return; }
+    const targetDow = DAY_ORDER.indexOf(dayKey); // 0=Sun
+    const refDow    = refDate.getDay();
+    // Days ahead: if target day >= ref day, use this week's; else next week's
+    let daysAhead = targetDow - refDow;
+    if(daysAhead < 0) daysAhead += 7;
+    const date = new Date(refDate);
+    date.setDate(refDate.getDate() + daysAhead);
+    const dateStr = date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,"0")+"-"+String(date.getDate()).padStart(2,"0");
+    entries.push({date:dateStr, day:dayKey, name:name});
+  });
+
+  // Sort by date
+  entries.sort((a,b)=>a.date.localeCompare(b.date));
+  return {entries, errors};
+}
+
+document.getElementById("parseBtn").onclick=function(){
+  const raw=document.getElementById("rawMsgInput").value.trim();
+  const weekStart=document.getElementById("weekStartInput").value;
+  if(!raw){alert("Please paste the message first.");return;}
+  if(!weekStart){alert("Please pick a date in the week.");return;}
+  const {entries,errors}=parseRawMessage(raw,weekStart);
+  const box=document.getElementById("previewBox");
+  box.style.display="block";box.innerHTML="";
+  if(entries.length===0){
+    box.className="preview-box err";
+    box.innerHTML="❌ Could not parse any day entries. Check format: <strong>Mon : Name</strong>";
+    document.getElementById("saveEntryBtn").style.display="none";parsedSchedule=null;return;
+  }
+  box.className="preview-box ok";
+  entries.forEach(e=>{
+    const r=document.createElement("div");r.className="preview-row";
+    r.innerHTML='<span class="preview-day">'+e.day+' '+fmtDisplay(e.date)+'</span><span class="preview-name">'+e.name.toUpperCase()+'</span>';
+    box.appendChild(r);
+  });
+  if(errors.length){
+    const note=document.createElement("div");note.style.cssText="margin-top:6px;font-size:10px;color:#dc2626;";note.textContent="⚠ Skipped: "+errors.join(", ");box.appendChild(note);
+  }
+  parsedSchedule={entries};
+  document.getElementById("saveEntryBtn").style.display="block";
+};
+
+document.getElementById("saveEntryBtn").onclick=async function(){
+  if(!parsedSchedule){return;}
+  const token=localStorage.getItem(ADMIN_TOKEN_KEY);
+  if(!token){alert("Token not found.");showScreen("setupScreen");return;}
+  const field=addEntryType==="rotaB"?"rotaB":"dnb";
+  parsedSchedule.entries.forEach(e=>{
+    let found=ROSTER_DATA.find(r=>r.date===e.date);
+    if(!found){
+      // Create new entry if date not in roster
+      found={date:e.date,day:e.day,person:null,rotaB:null,dnb:null};
+      ROSTER_DATA.push(found);
+      ROSTER_DATA.sort((a,b)=>a.date.localeCompare(b.date));
+    }
+    found[field]=e.name;
+  });
+  await pushToGitHub(token,"Duty update ("+field+"): week of "+parsedSchedule.entries[0].date,"saveEntryBtn","savingSpinner2","saveBtnText2","addSuccessBox");
+  // Rebuild months + badges after update so new names appear
+  months=buildMonths();monthKeys=Object.keys(months);buildAllConsecutive();renderBadges();renderAll();
+};
+
+// ── SHARED GITHUB PUSH ──
+async function pushToGitHub(token, commitMsg, btnId, spinnerId, textId, successId){
+  const btn=document.getElementById(btnId),spinner=document.getElementById(spinnerId),btnText=document.getElementById(textId);
+  btn.disabled=true;spinner.style.display="block";btnText.style.display="none";
+  try{
+    const shaRes=await fetch("https://api.github.com/repos/"+GITHUB_USER+"/"+GITHUB_REPO+"/contents/"+GITHUB_FILE,{
+      headers:{"Authorization":"token "+token,"Accept":"application/vnd.github.v3+json"}
+    });
+    if(!shaRes.ok) throw new Error("Could not fetch file info ("+shaRes.status+")");
+    const sha=(await shaRes.json()).sha;
+    // Clean nulls before saving
+    const clean=ROSTER_DATA.map(e=>{const c={...e};if(!c.rotaB)delete c.rotaB;if(!c.dnb)delete c.dnb;return c;});
+    const newContent=btoa(unescape(encodeURIComponent(JSON.stringify(clean,null,2))));
+    const pushRes=await fetch("https://api.github.com/repos/"+GITHUB_USER+"/"+GITHUB_REPO+"/contents/"+GITHUB_FILE,{
+      method:"PUT",
+      headers:{"Authorization":"token "+token,"Accept":"application/vnd.github.v3+json","Content-Type":"application/json"},
+      body:JSON.stringify({message:commitMsg,content:newContent,sha:sha})
+    });
+    if(!pushRes.ok){const err=await pushRes.json();throw new Error(err.message||"Push failed ("+pushRes.status+")");}
+    document.getElementById(successId).style.display="block";
+    buildAllConsecutive();months=buildMonths();monthKeys=Object.keys(months);renderAll();
+  }catch(err){
+    alert("❌ Error: "+err.message+"\n\nCheck your token has repo/contents access.");
+  }finally{
+    btn.disabled=false;spinner.style.display="none";btnText.style.display="block";
+  }
+}
+
+// ── FETCH ROSTER ──
+fetch(DATA_URL+"?t="+Date.now())
+  .then(res=>{if(!res.ok)throw new Error("HTTP "+res.status);return res.json();})
+  .then(data=>{
+    ROSTER_DATA=data.map(e=>({rotaB:null,dnb:null,...e}));
+    buildAllConsecutive();months=buildMonths();monthKeys=Object.keys(months);
+    activeMonth=monthKeys.includes(today.slice(0,7))?today.slice(0,7):monthKeys[0];
+    document.getElementById("loadingScreen").style.display="none";
+    renderBadges();renderAll();scrollToToday();
+  })
+  .catch(err=>{
+    document.getElementById("loadingScreen").style.display="none";
+    const eb=document.getElementById("errorBox");eb.style.display="block";
+    eb.innerHTML="⚠️ <strong>Could not load roster.</strong><br>Check internet connection and try again.<br><small style='color:#ef4444'>"+err.message+"</small>";
+  });
+</script>
+</body>
+</html>
