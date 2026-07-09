@@ -682,7 +682,8 @@
   {
     "date": "2026-08-09",
     "day": "Sun",
-    "person": "ps"
+    "person": "sm",
+    "swapped": true
   },
   {
     "date": "2026-08-10",
