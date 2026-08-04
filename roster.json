@@ -807,7 +807,8 @@
   {
     "date": "2026-08-22",
     "day": "Sat",
-    "person": "sm"
+    "person": "mp",
+    "swapped": true
   },
   {
     "date": "2026-08-23",
