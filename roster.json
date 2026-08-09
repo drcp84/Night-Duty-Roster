@@ -767,7 +767,8 @@
   {
     "date": "2026-08-14",
     "day": "Fri",
-    "person": "sm"
+    "person": "ks",
+    "swapped": true
   },
   {
     "date": "2026-08-15",
