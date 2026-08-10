@@ -744,39 +744,46 @@
     "person": "ps"
   },
   {
+    "rotaB": "pooja",
     "date": "2026-08-10",
     "day": "Mon",
     "person": "mp"
   },
   {
+    "rotaB": "mitul",
     "date": "2026-08-11",
     "day": "Tue",
     "person": "ps"
   },
   {
+    "rotaB": "ravi",
     "date": "2026-08-12",
     "day": "Wed",
     "person": "sm",
     "swapped": true
   },
   {
+    "rotaB": "kena",
     "date": "2026-08-13",
     "day": "Thu",
     "person": "cp"
   },
   {
+    "rotaB": "anuradha",
     "date": "2026-08-14",
     "day": "Fri",
     "person": "ks",
     "swapped": true
   },
   {
+    "rotaB": "tejasvini",
     "date": "2026-08-15",
     "day": "Sat",
     "person": "sm",
     "swapped": true
   },
   {
+    "rotaB": "anuradha",
     "date": "2026-08-16",
     "day": "Sun",
     "person": "mp"
