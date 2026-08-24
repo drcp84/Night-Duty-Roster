@@ -847,42 +847,49 @@
   },
   {
     "rotaB": "kena",
+    "dnb": "jay",
     "date": "2026-08-24",
     "day": "Mon",
     "person": "mp"
   },
   {
     "rotaB": "tejasvini",
+    "dnb": "tanmay",
     "date": "2026-08-25",
     "day": "Tue",
     "person": "ps"
   },
   {
     "rotaB": "anuradha",
+    "dnb": "manish",
     "date": "2026-08-26",
     "day": "Wed",
     "person": "ks"
   },
   {
     "rotaB": "mitul",
+    "dnb": "jay",
     "date": "2026-08-27",
     "day": "Thu",
     "person": "cp"
   },
   {
     "rotaB": "ravi",
+    "dnb": "tanmay",
     "date": "2026-08-28",
     "day": "Fri",
     "person": "sm"
   },
   {
     "rotaB": "pooja",
+    "dnb": "manish",
     "date": "2026-08-29",
     "day": "Sat",
     "person": "cp"
   },
   {
     "rotaB": "kena",
+    "dnb": "tanmay",
     "date": "2026-08-30",
     "day": "Sun",
     "person": "mitul/ravi"
