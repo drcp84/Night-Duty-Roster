@@ -1347,7 +1347,8 @@
   {
     "date": "2026-11-08",
     "day": "Sun",
-    "person": "mp"
+    "person": "ks",
+    "swapped": true
   },
   {
     "date": "2026-11-09",
