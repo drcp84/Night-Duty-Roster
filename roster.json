@@ -1244,6 +1244,7 @@
     "person": "sm"
   },
   {
+    "rotaB": "mitul",
     "dnb": "manish",
     "date": "2026-10-19",
     "day": "Mon",
@@ -1251,36 +1252,42 @@
     "swapped": true
   },
   {
+    "rotaB": "anuradha",
     "dnb": "tanmay",
     "date": "2026-10-20",
     "day": "Tue",
     "person": "ps"
   },
   {
+    "rotaB": "ravi",
     "dnb": "jay",
     "date": "2026-10-21",
     "day": "Wed",
     "person": "sm"
   },
   {
+    "rotaB": "pooja",
     "dnb": "manish",
     "date": "2026-10-22",
     "day": "Thu",
     "person": "mp"
   },
   {
+    "rotaB": "kena",
     "dnb": "tanmay",
     "date": "2026-10-23",
     "day": "Fri",
     "person": "ks"
   },
   {
+    "rotaB": "tejasvini",
     "dnb": "jay",
     "date": "2026-10-24",
     "day": "Sat",
     "person": "ravi"
   },
   {
+    "rotaB": "pooja",
     "dnb": "manish",
     "date": "2026-10-25",
     "day": "Sun",
