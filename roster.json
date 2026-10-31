@@ -1341,7 +1341,8 @@
     "dnb": "jay",
     "date": "2026-11-01",
     "day": "Sun",
-    "person": "ps"
+    "person": "cp",
+    "swapped": true
   },
   {
     "date": "2026-11-02",
