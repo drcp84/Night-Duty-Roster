@@ -1414,7 +1414,8 @@
   {
     "date": "2026-11-15",
     "day": "Sun",
-    "person": "cp"
+    "person": "ps",
+    "swapped": true
   },
   {
     "date": "2026-11-16",
