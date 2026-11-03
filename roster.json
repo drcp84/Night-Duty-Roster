@@ -1402,7 +1402,8 @@
   {
     "date": "2026-11-10",
     "day": "Tue",
-    "person": "ps"
+    "person": "ks",
+    "swapped": true
   },
   {
     "date": "2026-11-11",
