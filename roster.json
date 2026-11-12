@@ -1518,7 +1518,8 @@
   {
     "date": "2026-11-29",
     "day": "Sun",
-    "person": "sm"
+    "person": "ks",
+    "swapped": true
   },
   {
     "date": "2026-11-30",
