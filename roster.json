@@ -1482,7 +1482,8 @@
   {
     "date": "2026-11-22",
     "day": "Sun",
-    "person": "mitul/ravi"
+    "person": "sm",
+    "swapped": true
   },
   {
     "date": "2026-11-23",
